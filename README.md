@@ -12,13 +12,13 @@ The declarative library for creating quick and full-featured react forms.
 ## Installation:
 
 ```bash
-npm install react-formatge --save-dev
+npm install react-formatge --save
 ```
 
 or
 
 ```bash
-yarn add -D react-formatge
+yarn add react-formatge
 ```
 
 ## Usage :
