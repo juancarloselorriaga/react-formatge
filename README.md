@@ -23,25 +23,56 @@ yarn add react-formatge
 
 ## Usage :
 
-```js
-import React from 'react'
-import ReactDOM from 'react-dom/client'
-import { HelloWorld } from 'my-formatge'
+Form encapsulation in a single component will return the form data on submit.
 
-const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement)
-root.render(
-    <React.StrictMode>
-        <div>
-            <h2>Default counter</h2>
-            <HelloWorld />
-        </div>
-        <hr />
-        <div>
-            <h2>Counter with predefined value</h2>
-            <HelloWorld value={5} />
-        </div>
-    </React.StrictMode>,
-)
+```js
+// App.ts
+const App: FC = () => {
+  const [data, setData] = useState<ExampleFormFields | null>(null)
+
+  return (
+    <ExampleForm onFormSubmit={setData} />
+  )
+}
+
+export default App
+
+```
+
+Basic example on how we declare the fields of a form.
+
+```js
+// ExampleForm.ts
+const ExampleFormComponent: FC<ExampleFormComponentProps> = ({ data, onFormSubmit, ...props }) => {
+  const inputFields: FormFieldType<ExampleFormKeys>[] = [
+    {
+      componentType: 'input',
+      name: 'name',
+      label: 'name',
+      initialValue: defaultValues.name,
+    },
+    {
+      componentType: 'input',
+      name: 'email',
+      label: 'email',
+      initialValue: defaultValues.email,
+    },
+  ]
+
+  const handleOnFormSubmit = async (updatedData: ExampleFormFields) => {
+    await onFormSubmit(updatedData)
+  }
+
+  return (
+    <FormWrapper
+          onSubmitCb={handleOnFormSubmit}
+          {...{ inputFields }}
+          {...props}
+    />
+  )
+}
+
+export default ExampleFormComponent
 
 ```
 
