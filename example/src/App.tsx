@@ -1,7 +1,7 @@
 import React, { FC, useState } from 'react'
 import { Button, Heading, HStack, VStack } from '@chakra-ui/react'
 // @ts-ignore
-import ExampleForm, { ExampleFormFields } from '../ExampleForm'
+import ExampleForm, { ExampleFormFields } from './ExampleForm'
 
 const AppComponent: FC = () => {
   const [formSize, setFormSize] = useState<string>('sm')
