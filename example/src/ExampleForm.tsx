@@ -10,6 +10,7 @@ import {
   DateRangePickerComponent,
   FormUpdatedData,
   FormWrapper,
+  OnFormSubmit
 } from 'react-formatge'
 
 export type ExampleFormFields = {
