@@ -2,16 +2,14 @@ import React, { FC, useState } from 'react'
 import { StackProps } from '@chakra-ui/react'
 
 import {
-  FormFieldType,
   slugify,
   formValidationRgx,
   CheckboxComponent,
   DatePickerComponent,
   DateRangePickerComponent,
-  FormUpdatedData,
   FormWrapper,
-  OnFormSubmit
 } from 'react-formatge'
+import { OnFormSubmit, FormFieldType, FormUpdatedData } from 'react-formatge/dist/cjs/types'
 
 export type ExampleFormFields = {
   simpleField: string
