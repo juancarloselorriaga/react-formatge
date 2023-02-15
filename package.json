@@ -1,6 +1,6 @@
 {
   "name": "react-formatge",
-  "version": "0.0.2",
+  "version": "0.1.0",
   "description": "The declarative library for creating quick and full-featured react forms.",
   "author": "Juan Carlos Elorriaga (juancarloselorriaga)",
   "license": "MIT",
@@ -29,9 +29,11 @@
     "typescript"
   ],
   "devDependencies": {
+    "@chakra-ui/react": "^2.5.0",
     "@testing-library/react": "^13.4.0",
     "@types/jest": "^29.4.0",
     "@types/react": "^18.0.27",
+    "@types/react-date-range": "^1.4.4",
     "@types/react-dom": "^18.0.10",
     "@typescript-eslint/eslint-plugin": "^5.49.0",
     "@typescript-eslint/parser": "^5.49.0",
@@ -45,6 +47,7 @@
     "jest-environment-jsdom": "^29.4.1",
     "prettier": "^2.8.3",
     "react": "^18.2.0",
+    "react-date-range": "^1.4.0",
     "react-dom": "^18.2.0",
     "react-formatge": "^0.0.1",
     "ts-jest": "^29.0.5",
