@@ -2,14 +2,14 @@ import React, { FC, useState } from 'react'
 import { StackProps } from '@chakra-ui/react'
 
 import {
-  slugify,
-  formValidationRgx,
   CheckboxComponent,
   DatePickerComponent,
   DateRangePickerComponent,
+  formValidationRgx,
   FormWrapper,
+  slugify,
 } from 'react-formatge'
-import { OnFormSubmit, FormFieldType, FormUpdatedData } from 'react-formatge/dist/cjs/types'
+import { FormFieldType, OnFormSubmit } from 'react-formatge/dist/cjs/types'
 
 export type ExampleFormFields = {
   simpleField: string
@@ -20,7 +20,7 @@ export type ExampleFormFields = {
   age: string
   password: string
   isEnabled: boolean
-  dateString: string | null
+  date: Date
   repeatPassword: string
   rangeDate: [ Date, Date ]
 }
@@ -30,11 +30,9 @@ type ExampleFormKeys = keyof ExampleFormFields
 interface ExampleFormComponentProps extends StackProps {
   data?: ExampleFormFields
   onFormSubmit: OnFormSubmit<ExampleFormFields>
-  error?: any
-  buttonLabel?: string
 }
 
-const ExampleFormComponent: FC<ExampleFormComponentProps> = ( { data, buttonLabel, onFormSubmit, ...props } ) => {
+const ExampleFormComponent: FC<ExampleFormComponentProps> = ( { data, onFormSubmit, ...props } ) => {
   // We can pass default values coming from already set information or empty values
   const defaultValues = {
     simpleField: data?.simpleField || '',
@@ -42,7 +40,7 @@ const ExampleFormComponent: FC<ExampleFormComponentProps> = ( { data, buttonLabe
     email: data?.email || '',
     slug: data?.slug || '',
     description: data?.description || '',
-    dateString: data?.dateString ? new Date( data.dateString ) : new Date(),
+    date: data?.date ? new Date( data.date ) : new Date(),
     age: data?.age || 25,
     isEnabled: !!data?.isEnabled,
     rangeDate: data?.rangeDate || [ new Date(), new Date() ],
@@ -180,8 +178,8 @@ const ExampleFormComponent: FC<ExampleFormComponentProps> = ( { data, buttonLabe
 
     {
       componentType: 'component',
-      name: 'dateString',
-      initialValue: defaultValues.dateString,
+      name: 'date',
+      initialValue: defaultValues.date,
       label: 'date',
       helperText: 'Single date selector',
       component: <DatePickerComponent title={ 'Pick a date' } />,
@@ -210,28 +208,10 @@ const ExampleFormComponent: FC<ExampleFormComponentProps> = ( { data, buttonLabe
   ]
 
   const buttonProps = {
-    /*
-     Passing "isDisabled" to the props will let you handle and extend the conditions
-     to disable the submit button.
-     */
-    // isDisabled: <any boolean logic>,
-    // The children of the buttons can be a component or a label string
-    children: buttonLabel || 'Save',
+    children: 'Save',
   }
 
-  const handleOnFormSubmit = async ( updatedData: ExampleFormFields, formData: FormUpdatedData<ExampleFormKeys> ) => {
-    const completeFormData: ExampleFormFields = {
-      ...updatedData,
-      // we can pass information from an external component to the fomr data
-    }
-    // call the onFormSubmit callback and pass the updated form values
-    await onFormSubmit( completeFormData )
-    // We can reset the form data with the optional param "formData"
-    Object.keys( formData ).forEach(
-      ( k ) => ( formData[k as keyof ExampleFormFields].value = defaultValues[k as keyof typeof defaultValues] ),
-    )
-    setSlug( '' )
-  }
+  const handleOnFormSubmit = async ( updatedData: ExampleFormFields ) => await onFormSubmit( updatedData )
 
   return (
     <FormWrapper<ExampleFormKeys, ExampleFormFields>
