@@ -12,13 +12,14 @@ The declarative library for creating quick and full-featured react forms based o
 ## Installation:
 
 ```bash
-npm install react-formatge @chakra-ui/react react-date-range --save
+npm install react-formatge @chakra-ui/react @emotion/react @emotion/styled framer-motion react-date-range date-fns 
+--save
 ```
 
 or
 
 ```bash
-yarn add react-formatge @chakra-ui/react react-date-range
+yarn add react-formatge @chakra-ui/react @emotion/react @emotion/styled framer-motion react-date-range date-fns
 ```
 
 ## Wrap with the provider
