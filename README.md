@@ -7,7 +7,7 @@
 
 The declarative library for creating quick and full-featured react forms based on Chakra UI components.
 
-[//]: # ([**Live Demo**]&#40;https://juancarloselorriaga.github.io/react-formatge/&#41;)
+[**React Formatge Live Demo**](https://juancarloselorriaga.github.io/react-formatge/)
 
 ## Installation:
 
