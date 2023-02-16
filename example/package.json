@@ -1,6 +1,6 @@
 {
   "name": "example",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "private": true,
   "scripts": {
     "start": "parcel src/index.html"
@@ -18,7 +18,7 @@
     "react": "^18.2.0",
     "react-date-range": "^1.4.0",
     "react-dom": "^18.2.0",
-    "react-formatge": "^0.1.2"
+    "react-formatge": "^0.1.3"
   },
   "dependencies": {}
 }
