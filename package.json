@@ -1,6 +1,6 @@
 {
   "name": "react-formatge",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "The declarative library for creating quick and full-featured react forms.",
   "author": "Juan Carlos Elorriaga (juancarloselorriaga)",
   "license": "MIT",
