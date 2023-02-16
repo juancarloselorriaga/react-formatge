@@ -8,7 +8,7 @@ const AppComponent: FC = () => {
 
   return (
     <VStack w={'full'} justifyContent={'center'} spacing={6} py={12}>
-      <Heading>Example Form</Heading>
+      <Heading>React Formatge</Heading>
 
       <HStack>
         <Button size={'sm'} onClick={() => setFormSize('sm')} bg={formSize === 'sm' ? 'burlywood' : 'initial'}>
