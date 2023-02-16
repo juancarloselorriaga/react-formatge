@@ -7,24 +7,35 @@
 
 The declarative library for creating quick and full-featured react forms based on Chakra UI components.
 
+## Live demo:
+
 [**React Formatge Live Demo**](https://juancarloselorriaga.github.io/react-formatge/)
 
 ## Installation:
 
 ```bash
-npm install react-formatge @chakra-ui/react @emotion/react @emotion/styled framer-motion react-date-range date-fns 
---save
+npm install react-formatge --save
 ```
 
 or
 
 ```bash
-yarn add react-formatge @chakra-ui/react @emotion/react @emotion/styled framer-motion react-date-range date-fns
+yarn add react-formatge
 ```
 
-## Wrap with the provider
+## Important notes:
 
-complete instructions in https://chakra-ui.com/getting-started
+This package will only work in a [ChakraUI](https://chakra-ui.com/) project, and it will also need [date-fns](https://www.npmjs.com/package/date-fns) and [react-date-range](https://www.npmjs.com/package/react-date-range)
+
+````bash
+npm install @chakra-ui/react @emotion/react @emotion/styled framer-motion react-date-range date-fns
+````
+
+After installing these dependencies, wrap your main app with ChakraProvider 
+
+### Wrap with the provider
+
+Complete instructions in [ChakraUI Getting Started](https://chakra-ui.com/getting-started)
 
 ````js
 import * as React from 'react'
@@ -83,13 +94,13 @@ const ExampleFormComponent: FC<ExampleFormComponentProps> = ({data, onFormSubmit
       componentType: 'input',
       name: 'name',
       label: 'name',
-      initialValue: defaultValues.name,
+      initialValue: '',
     },
     {
       componentType: 'input',
       name: 'email',
       label: 'email',
-      initialValue: defaultValues.email,
+      initialValue: '',
     },
   ]
 
@@ -97,9 +108,7 @@ const ExampleFormComponent: FC<ExampleFormComponentProps> = ({data, onFormSubmit
     children: 'Save',
   }
 
-  const handleOnFormSubmit = async (updatedData: ExampleFormFields) => {
-    await onFormSubmit(updatedData)
-  }
+  const handleOnFormSubmit = async (updatedData: ExampleFormFields) => await onFormSubmit(updatedData)
 
   return (
     <FormWrapper<ExampleFormKeys, ExampleFormFields>
@@ -246,7 +255,7 @@ const inputFields = [
     initialValue: false,
     // We can use onChange to use the value outside the form
     component: (
-      <CheckboxComponent onChange={ (e) => console.log('The component can still return a value ->', e) }>
+      <CheckboxComponent onChange={ (e) => console.log('The component can still return the event ->', e) }>
         is enabled
       </CheckboxComponent>
     ),
@@ -254,7 +263,7 @@ const inputFields = [
 
   {
     componentType: 'component',
-    name: 'dateString',
+    name: 'date',
     initialValue: new Date(),
     label: 'date',
     helperText: 'Single date selector',
