@@ -8,6 +8,7 @@ interface FormUpdateHook<T> {
   handleOnSubmit: () => void
   isLoading: boolean
   resetData: () => void
+  cleanData: Partial<T>
 }
 
 export type UpdateDataPayload<T> = { name: string; value: T; id?: string | null }
@@ -111,5 +112,6 @@ export default <T, K>(
     handleOnSubmit,
     isLoading,
     resetData,
+    cleanData,
   }
 }

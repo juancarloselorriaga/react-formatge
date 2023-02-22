@@ -5,18 +5,20 @@ import formSchema from '../form.schema'
 import { AllAllowed, FormComponent, FormSchemaAllAllowedObject, FormWrapperProps, RecordConstraints } from '../types'
 import useFormUpdate, { UpdateDataPayload } from '../hooks/useFormUpdate'
 import FormItemWrapper from './FormItemWrapper'
+import useDidUpdateEffect from '../hooks/useDidUpdateEffect'
 
 function FormWrapper<T extends RecordConstraints, P>({
   inputFields,
   buttonProps,
   error,
   onSubmitCb,
+  onUpdate,
   children,
   ...props
 }: FormWrapperProps<T, Record<T, FormSchemaAllAllowedObject>, P>) {
   const { initialState, validationStateSchema } = formSchema<T>(inputFields)
 
-  const { updatedData, handleUpdateData, handleOnSubmit, isLoading, isEnabled } = useFormUpdate<
+  const { updatedData, handleUpdateData, handleOnSubmit, isLoading, isEnabled, cleanData } = useFormUpdate<
     Record<T, FormSchemaAllAllowedObject>,
     P
   >(initialState, validationStateSchema, onSubmitCb)
@@ -29,6 +31,10 @@ function FormWrapper<T extends RecordConstraints, P>({
       return !isEnabled
     }
   }, [buttonProps, isEnabled])
+
+  useDidUpdateEffect(() => {
+    onUpdate && onUpdate(cleanData as Partial<P>)
+  }, [cleanData])
 
   return (
     <FormContainer
