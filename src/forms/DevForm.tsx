@@ -19,16 +19,12 @@ interface DevFormComponentProps extends StackProps {
 const DevFormComponent: FC<DevFormComponentProps> = ( { data, buttonLabel, onFormSubmit, ...props } ) => {
   const [ updatedFormData, setUpdatedFormData ] = useState<Partial<DevFormFields> | null>( null )
 
-  const defaultValues = {
-    field: data?.field || ''
-  }
-
   const inputFields: FormFieldType<DevFormKeys>[] = [
     {
       componentType: 'input',
       name: 'field',
       label: 'field',
-      initialValue: defaultValues.field
+      initialValue: data?.field || ''
     }
   ]
 
