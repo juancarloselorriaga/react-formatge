@@ -1,10 +1,10 @@
 import React, { FC, useState } from 'react'
 import { Button, Heading, HStack, VStack } from '@chakra-ui/react'
-import ExampleForm, { ExampleFormFields } from './main/ExampleForm'
+import DevForm, { DevFormFields } from './forms/DevForm'
 
 const AppComponent: FC = () => {
   const [formSize, setFormSize] = useState<string>('sm')
-  const [data, setData] = useState<ExampleFormFields | null>(null)
+  const [data, setData] = useState<DevFormFields | null>(null)
 
   return (
     <VStack w={'full'} justifyContent={'center'} spacing={6} py={12}>
@@ -22,7 +22,7 @@ const AppComponent: FC = () => {
         </Button>
       </HStack>
 
-      <ExampleForm
+      <DevForm
         w={formSize}
         bg={'white'}
         border={'4px solid black'}
