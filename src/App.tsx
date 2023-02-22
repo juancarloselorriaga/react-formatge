@@ -6,6 +6,11 @@ const AppComponent: FC = () => {
   const [formSize, setFormSize] = useState<string>('sm')
   const [data, setData] = useState<DevFormFields | null>(null)
 
+  const handleFormSubmit = async(data:DevFormFields ) => {
+    console.log('DATA', data)
+    setData(data)
+  }
+
   return (
     <VStack w={'full'} justifyContent={'center'} spacing={6} py={12}>
       <Heading>Example Form</Heading>
@@ -28,7 +33,7 @@ const AppComponent: FC = () => {
         border={'4px solid black'}
         borderRadius={12}
         p={6}
-        onFormSubmit={setData}
+        onFormSubmit={handleFormSubmit}
         data={data ?? undefined}
       />
     </VStack>
