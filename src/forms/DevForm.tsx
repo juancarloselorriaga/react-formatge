@@ -1,6 +1,6 @@
-import { StackProps } from '@chakra-ui/react'
+import { Button, HStack, StackProps, VStack } from '@chakra-ui/react'
 import { FormFieldType, OnFormSubmit } from '../types'
-import React, { FC } from 'react'
+import React, { FC, useState } from 'react'
 import FormWrapper from '../_layout/FormWrapper'
 
 export type DevFormFields = {
@@ -11,14 +11,16 @@ type DevFormKeys = keyof DevFormFields
 
 interface DevFormComponentProps extends StackProps {
   data?: DevFormFields
-  onFormSubmit?: OnFormSubmit<DevFormFields>
+  onFormSubmit?: OnFormSubmit<Partial<DevFormFields>>
   error?: any
   buttonLabel?: string
 }
 
 const DevFormComponent: FC<DevFormComponentProps> = ( { data, buttonLabel, onFormSubmit, ...props } ) => {
+  const [ updatedFormData, setUpdatedFormData ] = useState<Partial<DevFormFields> | null>( null )
+
   const defaultValues = {
-    field: data?.field || '',
+    field: data?.field || ''
   }
 
   const inputFields: FormFieldType<DevFormKeys>[] = [
@@ -31,20 +33,32 @@ const DevFormComponent: FC<DevFormComponentProps> = ( { data, buttonLabel, onFor
   ]
 
   const buttonProps = {
-    children: 'Save'
+    display: 'none'
   }
 
-  const handleOnFormSubmit = async ( updatedData: DevFormFields ) => {
+  const handleOnFormSubmit = async ( updatedData: Partial<DevFormFields> ) => {
     if ( !onFormSubmit ) return
     await onFormSubmit( updatedData )
   }
 
   return (
-      <FormWrapper<DevFormKeys, DevFormFields>
-          onSubmitCb={ handleOnFormSubmit }
-          { ...{ inputFields, buttonProps } }
-          { ...props }
-      />
+      <VStack { ...props }>
+        <FormWrapper<DevFormKeys, DevFormFields>
+            onSubmitCb={ handleOnFormSubmit }
+            onUpdate={ setUpdatedFormData }
+            { ...{ inputFields, buttonProps } }
+        />
+        <HStack w={ 'full' } justify={ 'flex-end' }>
+          <Button colorScheme={ 'red' } variant={ 'ghost' }>
+            Cancel
+          </Button>
+          <Button onClick={ () =>
+              updatedFormData && handleOnFormSubmit( updatedFormData ) }>
+            Accept
+          </Button>
+        </HStack>
+      </VStack>
+
   )
 }
 

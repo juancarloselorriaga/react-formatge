@@ -32,6 +32,7 @@ export type FormWrapperProps<T, K, P> = StackProps & {
   onSubmitCb: (updatedData: P, formData: K) => Promise<void>
   buttonProps?: ButtonProps
   error?: any
+  onUpdate?: (updatedData: Partial<P>) => Promise<void> | void
 }
 
 export type FormFieldType<T> = FormComponentField<T> | FormInputField<T>
