@@ -4,7 +4,7 @@ import ExampleForm, { ExampleFormFields } from './ExampleForm'
 
 const AppComponent: FC = () => {
   const [ formSize, setFormSize ] = useState<string>( 'sm' )
-  const [ data, setData ] = useState<ExampleFormFields | null>( null )
+  const [ data, setData ] = useState<Partial<ExampleFormFields> | null>( null )
 
   useEffect( () => {
     if ( data ) {

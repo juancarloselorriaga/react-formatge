@@ -25,11 +25,10 @@ export type ExampleFormFields = {
   rangeDate: [ Date, Date ]
 }
 
-type ExampleFormKeys = keyof ExampleFormFields
-
+type PartialFields = Partial<ExampleFormFields>
 interface ExampleFormComponentProps extends StackProps {
-  data?: ExampleFormFields
-  onFormSubmit: OnFormSubmit<ExampleFormFields>
+  data?: PartialFields
+  onFormSubmit: OnFormSubmit<PartialFields>
 }
 
 const ExampleFormComponent: FC<ExampleFormComponentProps> = ( { data, onFormSubmit, ...props } ) => {
@@ -48,7 +47,7 @@ const ExampleFormComponent: FC<ExampleFormComponentProps> = ( { data, onFormSubm
 
   const [ slug, setSlug ] = useState<string>( defaultValues.slug )
 
-  const inputFields: FormFieldType<ExampleFormKeys>[] = [
+  const inputFields: FormFieldType<ExampleFormFields>[] = [
     {
       componentType: 'input',
       name: 'simpleField',
@@ -211,10 +210,10 @@ const ExampleFormComponent: FC<ExampleFormComponentProps> = ( { data, onFormSubm
     children: 'Save',
   }
 
-  const handleOnFormSubmit = async ( updatedData: ExampleFormFields ) => await onFormSubmit( updatedData )
+  const handleOnFormSubmit = async ( updatedData: PartialFields ) => await onFormSubmit( updatedData )
 
   return (
-    <FormWrapper<ExampleFormKeys, ExampleFormFields>
+    <FormWrapper<ExampleFormFields>
       onSubmitCb={ handleOnFormSubmit }
       { ...{ inputFields, buttonProps } }
       { ...props }
