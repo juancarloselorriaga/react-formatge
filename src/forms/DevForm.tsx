@@ -15,8 +15,6 @@ interface DevFormComponentProps extends StackProps {
 }
 
 const DevFormComponent: FC<DevFormComponentProps> = ( { data, buttonLabel, onFormSubmit, ...props } ) => {
-  const [ formUpdate, setFormUpdate ] = useState<FormUpdatePayload<DevFormFields> | null>( null )
-
   const inputFields: FormFieldType<DevFormFields>[] = [
     {
       componentType: 'input',
@@ -29,14 +27,16 @@ const DevFormComponent: FC<DevFormComponentProps> = ( { data, buttonLabel, onFor
     },
   ]
 
-  const buttonProps = {
-    display: 'none',
-  }
-
   const handleOnFormSubmit = async ( updatedData: Partial<DevFormFields> ) => {
     if ( !onFormSubmit ) return
     await onFormSubmit( updatedData )
   }
+
+  const buttonProps = {
+    display: 'none',
+  }
+
+  const [ formUpdate, setFormUpdate ] = useState<FormUpdatePayload<DevFormFields> | null>( null )
 
   return (
     <VStack { ...props }>
@@ -59,7 +59,6 @@ const DevFormComponent: FC<DevFormComponentProps> = ( { data, buttonLabel, onFor
         </Button>
       </HStack>
     </VStack>
-
   )
 }
 
