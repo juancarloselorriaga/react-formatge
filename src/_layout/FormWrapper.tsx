@@ -1,10 +1,9 @@
-import React, { Fragment, useMemo } from 'react'
+import React, { Fragment, useEffect, useMemo } from 'react'
 import InputField from '../_components/InputField'
 import FormContainer from './FormContainer'
 import formSchema from '../form.schema'
 import { AnyFormType, CustomComponentImplementation, FormWrapperProps, HandleUpdateDataPayload } from '../types'
 import useFormUpdate from '../hooks/useFormUpdate'
-import useDidUpdateEffect from '../hooks/useDidUpdateEffect'
 import FormItemWrapper from './FormItemWrapper'
 
 
@@ -20,6 +19,7 @@ function FormWrapper<T>(
   }: FormWrapperProps<T> ) {
   const { initialState, validationStateSchema } = formSchema<T>( inputFields )
 
+  const formUpdate = useFormUpdate<T>( initialState, validationStateSchema, onSubmitCb )
   const {
     formData,
     updatedData,
@@ -27,7 +27,7 @@ function FormWrapper<T>(
     handleOnSubmit,
     isLoading,
     isEnabled,
-  } = useFormUpdate<T>( initialState, validationStateSchema, onSubmitCb )
+  } = formUpdate
 
 
   const isButtonDisabled = useMemo( () => {
@@ -39,9 +39,12 @@ function FormWrapper<T>(
     }
   }, [ buttonProps, isEnabled ] )
 
-  useDidUpdateEffect( () => {
-    onUpdate && onUpdate( updatedData as Partial<T> )
-  }, [ updatedData ] )
+  useEffect( () => {
+    onUpdate && onUpdate( {
+      updatedData,
+      isEnabled,
+    } )
+  }, [ onUpdate, updatedData, isEnabled ] )
 
 
   return (

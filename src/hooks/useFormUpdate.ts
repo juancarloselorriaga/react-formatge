@@ -2,7 +2,7 @@ import { useCallback, useEffect, useMemo, useReducer, useState } from 'react'
 import useLoadingButton from './useLoadingButton'
 import { FormSchemaUpdatedDataState, FormSchemaValidationState, HandleUpdateDataPayload } from '../types'
 
-interface FormUpdateHook<T> {
+export interface FormUpdateHook<T> {
   formData: FormSchemaUpdatedDataState<T>
   updatedData: Partial<T>
   handleUpdateData: <K>( payload: HandleUpdateDataPayload<T, K> ) => Promise<void>
@@ -45,7 +45,7 @@ const useFormUpdate = <T>(
 
   useEffect( () => {
     setIsEnabled( !isStateValid )
-  }, [ formData, isStateValid, setIsEnabled ] )
+  }, [ isStateValid, setIsEnabled ] )
 
   const handleUpdateData = useCallback( async <K>( payload: HandleUpdateDataPayload<T, K> ) => {
       const { name, value, id } = payload

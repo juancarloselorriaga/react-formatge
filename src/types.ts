@@ -2,6 +2,7 @@ import { ButtonProps, StackProps } from '@chakra-ui/react'
 import React, { ReactElement } from 'react'
 import { InputFieldProps } from './_components/InputField'
 import { FormItemWrapperProps } from './_layout/FormItemWrapper'
+import { FormUpdateHook } from './hooks/useFormUpdate'
 
 export type AnyFormType = string | number | undefined | boolean | null | Date | [ Date, Date ]
 
@@ -41,12 +42,13 @@ export type OnFormSubmit<T> = ( formData: T ) => Promise<void> | void
 
 
 //********** Form Wrapper ***********
+export type FormUpdatePayload<T> = Pick<FormUpdateHook<T>, 'updatedData' | 'isEnabled'>
 export type FormWrapperProps<T> = StackProps & {
   inputFields: FormFieldType<T>[]
-  onSubmitCb: ( updatedData: Partial<T>, formData: FormSchemaUpdatedDataState<T> ) => Promise<void>
+  onSubmitCb?: ( updatedData: Partial<T>, formData: FormSchemaUpdatedDataState<T> ) => Promise<void>
   buttonProps?: ButtonProps
   error?: string
-  onUpdate?: ( updatedData: Partial<T> ) => void | Promise<void>
+  onUpdate?: ( payload: FormUpdatePayload<T> ) => void | Promise<void>
 }
 
 

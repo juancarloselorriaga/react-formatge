@@ -1,5 +1,5 @@
 import { Button, HStack, StackProps, VStack } from '@chakra-ui/react'
-import { FormFieldType, OnFormSubmit } from '../types'
+import { FormFieldType, FormUpdatePayload, OnFormSubmit } from '../types'
 import React, { FC, useState } from 'react'
 import FormWrapper from '../_layout/FormWrapper'
 
@@ -15,19 +15,22 @@ interface DevFormComponentProps extends StackProps {
 }
 
 const DevFormComponent: FC<DevFormComponentProps> = ( { data, buttonLabel, onFormSubmit, ...props } ) => {
-  const [ updatedFormData, setUpdatedFormData ] = useState<Partial<DevFormFields> | null>( null )
+  const [ formUpdate, setFormUpdate ] = useState<FormUpdatePayload<DevFormFields> | null>( null )
 
   const inputFields: FormFieldType<DevFormFields>[] = [
     {
       componentType: 'input',
       name: 'field',
       label: 'field',
-      initialValue: data?.field || ''
-    }
+      initialValue: data?.field || '',
+      validation: {
+        required: true,
+      },
+    },
   ]
 
   const buttonProps = {
-    display: 'none'
+    display: 'none',
   }
 
   const handleOnFormSubmit = async ( updatedData: Partial<DevFormFields> ) => {
@@ -36,22 +39,26 @@ const DevFormComponent: FC<DevFormComponentProps> = ( { data, buttonLabel, onFor
   }
 
   return (
-      <VStack { ...props }>
-        <FormWrapper<DevFormFields>
-            onSubmitCb={ handleOnFormSubmit }
-            onUpdate={ setUpdatedFormData }
-            { ...{ inputFields, buttonProps } }
-        />
-        <HStack w={ 'full' } justify={ 'flex-end' }>
-          <Button colorScheme={ 'red' } variant={ 'ghost' }>
-            Cancel
-          </Button>
-          <Button onClick={ () =>
-              updatedFormData && handleOnFormSubmit( updatedFormData ) }>
-            Accept
-          </Button>
-        </HStack>
-      </VStack>
+    <VStack { ...props }>
+      <FormWrapper<DevFormFields>
+        onSubmitCb={ handleOnFormSubmit }
+        onUpdate={ setFormUpdate }
+        { ...{ inputFields, buttonProps } }
+      />
+      <HStack w={ 'full' } justify={ 'flex-end' }>
+        <Button
+          colorScheme={ 'red' }
+          variant={ 'ghost' }>
+          Cancel
+        </Button>
+        <Button
+          isDisabled={ !formUpdate?.isEnabled }
+          onClick={ () => formUpdate && handleOnFormSubmit( formUpdate.updatedData ) }
+        >
+          Accept
+        </Button>
+      </HStack>
+    </VStack>
 
   )
 }
