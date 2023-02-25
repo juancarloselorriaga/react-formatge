@@ -7,8 +7,6 @@ export type DevFormFields = {
   field: string
 }
 
-type DevFormKeys = keyof DevFormFields
-
 interface DevFormComponentProps extends StackProps {
   data?: DevFormFields
   onFormSubmit?: OnFormSubmit<Partial<DevFormFields>>
@@ -19,7 +17,7 @@ interface DevFormComponentProps extends StackProps {
 const DevFormComponent: FC<DevFormComponentProps> = ( { data, buttonLabel, onFormSubmit, ...props } ) => {
   const [ updatedFormData, setUpdatedFormData ] = useState<Partial<DevFormFields> | null>( null )
 
-  const inputFields: FormFieldType<DevFormKeys>[] = [
+  const inputFields: FormFieldType<DevFormFields>[] = [
     {
       componentType: 'input',
       name: 'field',
@@ -39,7 +37,7 @@ const DevFormComponent: FC<DevFormComponentProps> = ( { data, buttonLabel, onFor
 
   return (
       <VStack { ...props }>
-        <FormWrapper<DevFormKeys, DevFormFields>
+        <FormWrapper<DevFormFields>
             onSubmitCb={ handleOnFormSubmit }
             onUpdate={ setUpdatedFormData }
             { ...{ inputFields, buttonProps } }

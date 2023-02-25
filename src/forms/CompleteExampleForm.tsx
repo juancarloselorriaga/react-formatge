@@ -1,5 +1,5 @@
 import { StackProps } from '@chakra-ui/react'
-import { FormFieldType, FormUpdatedData, OnFormSubmit } from '../types'
+import { FormFieldType, OnFormSubmit, FormSchemaUpdatedDataState } from '../types'
 import React, { FC, useState } from 'react'
 import { slugify } from '../helpers/utils'
 import { formValidationRgx } from '../helpers/rgx'
@@ -22,11 +22,9 @@ export type ExampleFormFields = {
   rangeDate: [ Date, Date ]
 }
 
-type ExampleFormKeys = keyof ExampleFormFields
-
 interface ExampleFormComponentProps extends StackProps {
   data?: ExampleFormFields
-  onFormSubmit: OnFormSubmit<ExampleFormFields>
+  onFormSubmit: OnFormSubmit<Partial<ExampleFormFields>>
   error?: any
   buttonLabel?: string
 }
@@ -47,7 +45,7 @@ const ExampleFormComponent: FC<ExampleFormComponentProps> = ( { data, buttonLabe
 
   const [ slug, setSlug ] = useState<string>( defaultValues.slug )
 
-  const inputFields: FormFieldType<ExampleFormKeys>[] = [
+  const inputFields: FormFieldType<ExampleFormFields>[] = [
     {
       componentType: 'input',
       name: 'simpleField',
@@ -216,8 +214,8 @@ const ExampleFormComponent: FC<ExampleFormComponentProps> = ( { data, buttonLabe
     children: buttonLabel || 'Save'
   }
 
-  const handleOnFormSubmit = async ( updatedData: ExampleFormFields, formData: FormUpdatedData<ExampleFormKeys> ) => {
-    const completeFormData: ExampleFormFields = {
+  const handleOnFormSubmit = async ( updatedData: Partial<ExampleFormFields>, formData: FormSchemaUpdatedDataState<ExampleFormFields> ) => {
+    const completeFormData: Partial<ExampleFormFields> = {
       ...updatedData
       // we can pass information from an external component to the fomr data
     }
@@ -228,10 +226,11 @@ const ExampleFormComponent: FC<ExampleFormComponentProps> = ( { data, buttonLabe
         ( k ) => ( formData[k as keyof ExampleFormFields].value = defaultValues[k as keyof typeof defaultValues] )
     )
     setSlug( '' )
+    console.log(formData.age.value)
   }
 
   return (
-      <FormWrapper<ExampleFormKeys, ExampleFormFields>
+      <FormWrapper<ExampleFormFields>
           onSubmitCb={ handleOnFormSubmit }
           { ...{ inputFields, buttonProps } }
           { ...props }

@@ -2,11 +2,11 @@ import React, { FC } from 'react'
 import { DateRange, Range, RangeKeyDict } from 'react-date-range'
 import { formatDate } from '../../helpers/utils'
 import DateComponentWrapper from './DateComponentWrapper'
-import { FormComponent } from '../../types'
+import { CustomComponentImplementation } from '../../types'
 
 type DatePickerRangeDate = [Date, Date]
 
-interface DatePickerComponentProps extends FormComponent<[Date, Date]> {
+interface DatePickerComponentProps extends CustomComponentImplementation<[Date, Date]> {
   title: string
   onChange?: (dates: DatePickerRangeDate) => void
   dateDisplayFormat?: string

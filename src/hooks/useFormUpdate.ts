@@ -1,117 +1,115 @@
 import { useCallback, useEffect, useMemo, useReducer, useState } from 'react'
 import useLoadingButton from './useLoadingButton'
+import { FormSchemaUpdatedDataState, FormSchemaValidationState, HandleUpdateDataPayload } from '../types'
 
 interface FormUpdateHook<T> {
-  updatedData: T
-  handleUpdateData: <K>(e: UpdateDataPayload<K>) => Promise<void>
+  formData: FormSchemaUpdatedDataState<T>
+  updatedData: Partial<T>
+  handleUpdateData: <K>( payload: HandleUpdateDataPayload<T, K> ) => Promise<void>
   isEnabled: boolean
   handleOnSubmit: () => void
   isLoading: boolean
   resetData: () => void
-  cleanData: Partial<T>
 }
 
-export type UpdateDataPayload<T> = { name: string; value: T; id?: string | null }
-
-export default <T, K>(
-  initialState: Record<string, unknown>,
-  validationSchema: Record<string, unknown> = {},
-  callback: (cleanData: K, updatedData: T) => Promise<void> = async () => undefined,
+const useFormUpdate = <T>(
+  initialState: FormSchemaUpdatedDataState<T>,
+  validationSchema: FormSchemaValidationState<T>,
+  callback: ( updatedData: Partial<T>, formData: FormSchemaUpdatedDataState<T> )
+    => void | Promise<void> = () => undefined,
 ): FormUpdateHook<T> => {
-  const [isLoading, setButtonLoader] = useLoadingButton()
 
-  useEffect(() => {
-    return () => {
-      setButtonLoader(false)
-    }
-  }, [setButtonLoader])
+  const [ isLoading, setButtonLoading ] = useLoadingButton()
+  const [ isEnabled, setIsEnabled ] = useState<boolean>( false )
 
-  const [updatedData, setUpdatedData] = useReducer(
-    (state: any, newState: any) => ({ ...state, ...newState }),
-    initialState,
-  )
+  const [ formData, setFormData ] = useReducer(
+    (
+      state: FormSchemaUpdatedDataState<T>,
+      newState: FormSchemaUpdatedDataState<T>,
+    ) => ( { ...state, ...newState } ), initialState )
 
-  const [cleanData, setCleanData] = useReducer((state: any, newState: any) => ({ ...state, ...newState }), {})
+  const [ updatedData, setUpdatedData ] = useReducer( (
+    state: Partial<T>,
+    newState: Partial<T>,
+  ) => ( { ...state, ...newState } ), {} )
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [_, setNotValid] = useState<boolean>(false)
-  const [isEnabled, setIsEnabled] = useState<boolean>(false)
 
-  const validateState = useMemo(() => {
-    return Object.keys(validationSchema).some((key) => {
-      const isInputFieldRequired = (validationSchema as any)[key].required
-      const stateValue = updatedData[key].value
-      const stateError = updatedData[key].error
+  const isStateValid = useMemo( () => {
+    return Object.keys( validationSchema ).some( ( key ) => {
+      const k = key as keyof T
+      const isRequired = validationSchema[k].required
+      const { value, error } = formData[k]
+      return ( isRequired && !value ) || error
+    } )
+  }, [ formData, validationSchema ] )
 
-      return (isInputFieldRequired && !stateValue) || stateError
-    })
-  }, [updatedData, validationSchema])
+  useEffect( () => {
+    setIsEnabled( !isStateValid )
+  }, [ formData, isStateValid, setIsEnabled ] )
 
-  useEffect(() => {
-    setIsEnabled(!validateState)
-  }, [updatedData, validateState, setIsEnabled])
-
-  const handleUpdateData = useCallback(
-    async <R>(e: UpdateDataPayload<R>) => {
-      const { name, value, id } = e
-      setNotValid(true)
-
+  const handleUpdateData = useCallback( async <K>( payload: HandleUpdateDataPayload<T, K> ) => {
+      const { name, value, id } = payload
+      const { required: isRequired, equalsField, validator } = validationSchema[name as keyof T]
+      const isValueString = typeof value === 'string'
+      const updatedDataPayload = { [name]: value } as Partial<T>
       let error = ''
-      if ((validationSchema as any)[name].required) {
-        if (!value) {
-          error = 'required'
-        }
-      }
-      if (!(validationSchema as any)[name].validator && (validationSchema as any)[name].equalsField) {
-        if (value !== updatedData[(validationSchema as any)[name].equalsField.field].value) {
-          error = (validationSchema as any)[name].equalsField.error
-        }
 
-        setUpdatedData({ [name]: { value, error, id } })
-        setCleanData({ [name]: value })
+      if ( isRequired && !value ) {
+        error = 'required'
       }
 
-      if (
-        (validationSchema as any)[name].validator !== null &&
-        typeof (validationSchema as any)[name].validator === 'object'
-      ) {
-        if (value && !(validationSchema as any)[name].validator.regEx.test(value)) {
-          error = (validationSchema as any)[name].validator.error
+      if ( !validator && equalsField ) {
+        if ( value !== formData[equalsField.field].value ) {
+          error = equalsField.error
+        }
+
+        const formDataPayload = { [name]: { value, error, id } } as FormSchemaUpdatedDataState<T>
+        setFormData( formDataPayload )
+        setUpdatedData( updatedDataPayload )
+      }
+
+
+      if ( validator ) {
+        if ( isValueString && !validator.regEx.test( value ) ) {
+          error = validator.error
         }
       }
 
-      setUpdatedData({ [name]: { value, error, id } })
-      setCleanData({ [name]: value })
+      const formDataPayload = { [name]: { value, error, id } } as FormSchemaUpdatedDataState<T>
+      setFormData( formDataPayload )
+      setUpdatedData( updatedDataPayload )
     },
-    [validationSchema, updatedData],
+    [ validationSchema, formData ],
   )
 
-  const handleOnSubmit = useCallback(async () => {
-    setButtonLoader(true)
-    setIsEnabled(false)
+  const handleOnSubmit = useCallback( async () => {
+    setButtonLoading( true )
+    setIsEnabled( false )
 
-    if (!validateState) {
+    if ( !isStateValid ) {
       try {
-        await callback(cleanData, updatedData)
-      } catch (error) {
-        console.log('Form submit error', error)
+        await callback( updatedData, formData )
+      } catch ( error ) {
+        console.warn( 'Form submit error', error )
       }
 
-      setButtonLoader(false)
+      setButtonLoading( false )
     }
-  }, [setButtonLoader, validateState, callback, cleanData, updatedData])
+  }, [ setButtonLoading, isStateValid, callback, updatedData, formData ] )
 
-  const resetData = useCallback(() => {
-    setUpdatedData(initialState)
-  }, [initialState])
+  const resetData = useCallback( () => {
+    setFormData( initialState )
+  }, [ initialState ] )
 
   return {
+    formData,
     updatedData,
     handleUpdateData,
     isEnabled,
     handleOnSubmit,
     isLoading,
     resetData,
-    cleanData
   }
 }
+
+export default useFormUpdate

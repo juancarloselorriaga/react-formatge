@@ -1,8 +1,8 @@
 import React, { FC } from 'react'
 import { Checkbox, CheckboxProps } from '@chakra-ui/react'
-import { FormComponent } from '../types'
+import { CustomComponentImplementation } from '../types'
 
-type CheckboxComponentProps = CheckboxProps & FormComponent<boolean>
+type CheckboxComponentProps = CheckboxProps & CustomComponentImplementation<boolean>
 
 const CheckboxComponent: FC<CheckboxComponentProps> = ({ value, onUpdateValue, onChange, defaultValue, ...props }) => {
   return (
