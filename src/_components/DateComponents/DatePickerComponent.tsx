@@ -4,9 +4,9 @@ import 'react-date-range/dist/styles.css'
 import 'react-date-range/dist/theme/default.css'
 import { formatDate } from '../../helpers/utils'
 import DateComponentWrapper from './DateComponentWrapper'
-import { FormComponent } from '../../types'
+import { CustomComponentImplementation } from '../../types'
 
-interface DatePickerComponentProps extends FormComponent<Date> {
+interface DatePickerComponentProps extends CustomComponentImplementation<Date> {
   title: string
   onChange?: (date: Date) => void
   dateDisplayFormat?: string

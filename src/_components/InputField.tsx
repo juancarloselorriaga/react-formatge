@@ -11,20 +11,19 @@ import {
   NumberInputStepper,
   Textarea,
 } from '@chakra-ui/react'
-import { UpdateDataPayload } from '../hooks/useFormUpdate'
 import FormItemWrapper, { FormItemWrapperProps } from '../_layout/FormItemWrapper'
+import { HandleUpdateDataPayload } from '../types'
 
-export type IInputFieldProps = InputHTMLAttributes<HTMLInputElement> &
+export type InputFieldProps = InputHTMLAttributes<HTMLInputElement> &
   (InputProps | NumberInputProps) &
   FormItemWrapperProps & {
     name: string
     textarea?: boolean
-    onValueChange?: (payload: UpdateDataPayload<string>) => void
+    onValueChange?: (payload: HandleUpdateDataPayload<any, string>) => void
   }
 
-const InputField = forwardRef<HTMLInputElement | null, IInputFieldProps>(
+const InputField = forwardRef<HTMLInputElement | null, InputFieldProps>(
   ({ name, textarea, label, isRequired, error, noTopSpace, helperText, onValueChange, ...props }, ref) => {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const [_, setValue] = React.useState(props.defaultValue?.toString() || '')
 
     const handleNumberInputChange = (valueString: string) => {

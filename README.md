@@ -25,13 +25,15 @@ yarn add react-formatge
 
 ## Important notes:
 
-This package will only work in a [ChakraUI](https://chakra-ui.com/) project, and it will also need [date-fns](https://www.npmjs.com/package/date-fns) and [react-date-range](https://www.npmjs.com/package/react-date-range)
+This package will only work in a [ChakraUI](https://chakra-ui.com/) project, and it will also
+need [date-fns](https://www.npmjs.com/package/date-fns)
+and [react-date-range](https://www.npmjs.com/package/react-date-range)
 
 ````bash
 npm install @chakra-ui/react @emotion/react @emotion/styled framer-motion react-date-range date-fns
 ````
 
-After installing these dependencies, wrap your main app with ChakraProvider 
+After installing these dependencies, wrap your main app with ChakraProvider
 
 ### Wrap with the provider
 
@@ -41,7 +43,7 @@ Complete instructions in [ChakraUI Getting Started](https://chakra-ui.com/gettin
 import * as React from 'react'
 
 // 1. import `ChakraProvider` component
-import {ChakraProvider} from '@chakra-ui/react'
+import { ChakraProvider } from '@chakra-ui/react'
 
 
 function App() {
@@ -61,7 +63,7 @@ Form encapsulation in a single component will return the form data on submit.
 ```tsx
 // App.ts
 const App: FC = () => {
-  const [data, setData] = useState<ExampleFormFields | null>(null)
+  const [ data, setData ] = useState<Partial<ExampleFormFields> | null>( null )
 
   return (
     <ExampleForm onFormSubmit={ setData } />
@@ -81,15 +83,13 @@ export type ExampleFormFields = {
   email: string
 }
 
-type ExampleFormKeys = keyof ExampleFormFields
-
 interface ExampleFormComponentProps extends StackProps {
   data?: ExampleFormFields
   onFormSubmit: OnFormSubmit<ExampleFormFields>
 }
 
-const ExampleFormComponent: FC<ExampleFormComponentProps> = ({data, onFormSubmit, ...props}) => {
-  const inputFields: FormFieldType<ExampleFormKeys>[] = [
+const ExampleFormComponent: FC<ExampleFormComponentProps> = ( { data, onFormSubmit, ...props } ) => {
+  const inputFields: FormFieldType<ExampleFormFields>[] = [
     {
       componentType: 'input',
       name: 'name',
@@ -108,12 +108,12 @@ const ExampleFormComponent: FC<ExampleFormComponentProps> = ({data, onFormSubmit
     children: 'Save',
   }
 
-  const handleOnFormSubmit = async (updatedData: ExampleFormFields) => await onFormSubmit(updatedData)
+  const handleOnFormSubmit = async ( updatedData: ExampleFormFields ) => await onFormSubmit( updatedData )
 
   return (
-    <FormWrapper<ExampleFormKeys, ExampleFormFields>
+    <FormWrapper<ExampleFormFields>
       onSubmitCb={ handleOnFormSubmit }
-      { ...{inputFields, buttonProps} }
+      { ...{ inputFields, buttonProps } }
       { ...props }
     />
   )
@@ -225,7 +225,7 @@ const inputFields = [
     label: 'name',
     placeholder: 'type the name',
     // a field can affect the value of another component field
-    onValueChange: (payload) => setSlug(slugify(payload.value)),
+    onValueChange: ( payload ) => setSlug( slugify( payload.value ) ),
     initialValue: '',
   },
 
@@ -235,7 +235,7 @@ const inputFields = [
     label: 'slug',
     placeholder: 'type the slug',
     // a field can affect its own value
-    onValueChange: (payload) => setSlug(slugify(payload.value)),
+    onValueChange: ( payload ) => setSlug( slugify( payload.value ) ),
     // And then passing the custom value again as "value"
     value: slug,
   },
@@ -255,7 +255,7 @@ const inputFields = [
     initialValue: false,
     // We can use onChange to use the value outside the form
     component: (
-      <CheckboxComponent onChange={ (e) => console.log('The component can still return the event ->', e) }>
+      <CheckboxComponent onChange={ ( e ) => console.log( 'The component can still return the event ->', e ) }>
         is enabled
       </CheckboxComponent>
     ),
@@ -276,14 +276,14 @@ const inputFields = [
   {
     componentType: 'component',
     name: 'rangeDate',
-    initialValue: [new Date(), new Date()],
+    initialValue: [ new Date(), new Date() ],
     label: 'start and end date',
     helperText: 'Range date selector',
     // We can handle data outside the form
     component: (
       <DateRangePickerComponent
         title={ 'pick the start and end date' }
-        onChange={ (range: [Date, Date]) => console.log('This component returns the value ->', range) }
+        onChange={ ( range: [ Date, Date ] ) => console.log( 'This component returns the value ->', range ) }
       />
     ),
     validation: {
@@ -291,6 +291,47 @@ const inputFields = [
     },
   },
 ]
+
+````
+
+
+### Creating your own React-Formatge extension components
+
+You can create your own extension components with custom logic, it's simple! You just have to implement the
+CustomComponentImplementation<any> type on your custom component like so:
+
+````tsx
+
+import React, { FC } from 'react'
+import { Checkbox, CheckboxProps } from '@chakra-ui/react'
+import { CustomComponentImplementation } from '../types'
+
+type CheckboxComponentProps = CheckboxProps & CustomComponentImplementation<boolean>
+
+const CheckboxComponent: FC<CheckboxComponentProps> = (
+  {
+    value,
+    onUpdateValue,
+    onChange,
+    defaultValue,
+    ...props
+  } ) => {
+  
+  return (
+    <Checkbox
+      defaultChecked={ defaultValue }
+      isChecked={ value }
+      onChange={ ( e ) => {
+        onUpdateValue && onUpdateValue( e.target.checked )
+        // preserve the default onChange events
+        onChange && onChange( e )
+      } }
+      { ...props }
+    />
+  )
+}
+
+export default CheckboxComponent
 
 ````
 
@@ -304,6 +345,46 @@ Passing "isDisabled" to the props will let you handle and extend the conditions 
   children: 'Save'  // The children of the buttons can be a component or a label string
 }
 ````
+
+### Overwrite default buttons
+
+1. Passing updating the buttonProps to hide the default component.
+2. Pass a callback to "onUpdate" to FormWrapper component to set your state
+3. Use the button state or the updated form data with custom logic
+
+````tsx
+
+const [ formUpdate, setFormUpdate ] = useState<FormUpdatePayload<DevFormFields> | null>( null )
+
+const buttonProps = {
+  display: 'none', // 1.
+}
+
+return (
+  <VStack { ...props }>
+    <FormWrapper<DevFormFields>
+      onSubmitCb={ handleOnFormSubmit }
+      onUpdate={ setFormUpdate } // 2.
+      { ...{ inputFields, buttonProps } }
+    />
+    <HStack w={ 'full' } justify={ 'flex-end' }>
+      <Button
+        colorScheme={ 'red' }
+        variant={ 'ghost' }>
+        Cancel
+      </Button>
+      <Button
+        isDisabled={ !formUpdate?.isEnabled } // 3.
+        onClick={ () => formUpdate && handleOnFormSubmit( formUpdate.updatedData ) } // 3.
+      >
+        Accept
+      </Button>
+    </HStack>
+  </VStack>
+)
+````
+
+
 
 [npm-url]: https://www.npmjs.com/package/react-formatge
 
