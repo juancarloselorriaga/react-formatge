@@ -1,6 +1,8 @@
 import React, { FC, useEffect, useState } from 'react'
-import { Button, Heading, HStack, VStack } from '@chakra-ui/react'
+import { Button, Heading, HStack, Text, VStack } from '@chakra-ui/react'
 import ExampleForm, { ExampleFormFields } from './ExampleForm'
+// @ts-ignore
+import { version } from '../package.json'
 
 const AppComponent: FC = () => {
   const [ formSize, setFormSize ] = useState<string>( 'sm' )
@@ -38,6 +40,8 @@ const AppComponent: FC = () => {
         onFormSubmit={ setData }
         data={ data ?? undefined }
       />
+
+      <Text fontSize={ 'xs' }>{ version }</Text>
     </VStack>
   )
 }
