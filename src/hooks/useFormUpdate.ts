@@ -89,7 +89,6 @@ const useFormUpdate = <T>(
 
   const handleOnSubmit = useCallback( async () => {
     setButtonLoading( true )
-    setIsEnabled( false )
 
     if ( !isStateValid ) {
       try {
