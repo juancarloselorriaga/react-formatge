@@ -98,7 +98,7 @@ function FormWrapper<T>(
 
                 const clonedComponentProps: CustomComponentImplementation<AnyFormType> = {
                   defaultValue: initialValue,
-                  value: formData[name].value as AnyFormType,
+                  value: formData[name]?.value as AnyFormType,
                   onUpdateValue: ( value ) =>
                     handleUpdateData( {
                       id: name,
