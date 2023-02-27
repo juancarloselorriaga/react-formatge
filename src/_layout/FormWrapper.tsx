@@ -74,15 +74,15 @@ function FormWrapper<T>(
                 } = props
 
                 // if a value is passed, this will update its state within useFormUpdate hook
-                if ( typeof value === 'string' && formData[name].value !== value ) {
+                if ( typeof value === 'string' && formData[name]?.value !== value ) {
                   handleUpdateData( { id: restOfProps.id, name, value } ).then()
                 }
 
                 return (
                   <InputField
                     isRequired={ validation?.required }
-                    value={ formData[name].value?.toString() || '' }
-                    error={ formData[name].error }
+                    value={ formData[name]?.value?.toString() || '' }
+                    error={ formData[name]?.error }
                     { ...restOfProps }
                     onValueChange={ ( payload: HandleUpdateDataPayload<T, string> ) => {
                       onValueChange && onValueChange( payload )

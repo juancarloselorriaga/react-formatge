@@ -38,8 +38,13 @@ const useFormUpdate = <T>(
     return Object.keys( validationSchema ).some( ( key ) => {
       const k = key as keyof T
       const isRequired = validationSchema[k].required
-      const { value, error } = formData[k]
-      return ( isRequired && !value ) || error
+
+      try {
+        const { value, error } = formData[k]
+        return ( isRequired && !value ) || error
+      } catch {
+        return false
+      }
     } )
   }, [ formData, validationSchema ] )
 
