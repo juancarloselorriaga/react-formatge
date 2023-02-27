@@ -47,6 +47,7 @@ const DevFormComponent: FC<DevFormComponentProps> = ( { data, buttonLabel, onFor
   const handleOnFormSubmit = async ( updatedData: Partial<DevFormFields> ) => {
     if ( !onFormSubmit ) return
     await onFormSubmit( updatedData )
+    console.log(updatedData)
   }
 
   return (
