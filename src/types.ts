@@ -49,6 +49,8 @@ export type FormWrapperProps<T> = StackProps & {
   buttonProps?: ButtonProps
   error?: string
   onUpdate?: ( payload: FormUpdatePayload<T> ) => void | Promise<void>
+  // property passed to be
+  followInitialState?: boolean
 }
 
 
