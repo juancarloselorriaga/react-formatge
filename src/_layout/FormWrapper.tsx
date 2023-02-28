@@ -5,6 +5,7 @@ import formSchema from '../form.schema'
 import { AnyFormType, CustomComponentImplementation, FormWrapperProps, HandleUpdateDataPayload } from '../types'
 import useFormUpdate from '../hooks/useFormUpdate'
 import FormItemWrapper from './FormItemWrapper'
+import useInitialState from '../hooks/useInitialState'
 
 
 function FormWrapper<T>(
@@ -15,6 +16,7 @@ function FormWrapper<T>(
     onSubmitCb,
     onUpdate,
     children,
+    followInitialState = false,
     ...props
   }: FormWrapperProps<T> ) {
   const { initialState, validationStateSchema } = formSchema<T>( inputFields )
@@ -27,8 +29,10 @@ function FormWrapper<T>(
     handleOnSubmit,
     isLoading,
     isEnabled,
+    resetData,
   } = formUpdate
 
+  useInitialState( initialState, resetData, { paused: !followInitialState } )
 
   const isButtonDisabled = useMemo( () => {
     // the parent can configure extra isDisabled conditions if it includes isDisabled with additional logginc
