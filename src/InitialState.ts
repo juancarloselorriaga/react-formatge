@@ -1,9 +1,6 @@
 class InitialStateSingleton {
   private static instance: InitialStateSingleton
-  private inViewFormInitialState: string = ''
-
-  private constructor() {
-  }
+  private inViewFormInitialState = ''
 
   public static getInstance(): InitialStateSingleton {
     if ( !InitialStateSingleton.instance ) {
