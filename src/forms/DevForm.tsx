@@ -2,10 +2,9 @@ import { StackProps } from '@chakra-ui/react'
 import { FormFieldType, OnFormSubmit } from '../types'
 import React, { FC } from 'react'
 import FormWrapper from '../_layout/FormWrapper'
-import OptionSelectionComponent from '../_components/OptionSelection/OptionSelectionComponent'
 
 export type DevFormFields = {
-  optionSelection: string
+  input: string
 }
 
 interface DevFormComponentProps extends StackProps {
@@ -19,16 +18,10 @@ const DevFormComponent: FC<DevFormComponentProps> = ( { data, buttonLabel, onFor
 
   const inputFields: FormFieldType<DevFormFields>[] = [
     {
-      componentType: 'component',
-      name: 'optionSelection',
-      label: 'option selection',
-      initialValue: 'unselected',
-      component: (
-        <OptionSelectionComponent items={[
-          {label: 'Unselected', value: 'unselected'},
-          {label: 'Selected', value: 'selected'}
-        ]} />
-      )
+      name: 'input',
+      label: 'input',
+      initialValue: data?.input || '',
+      componentType: 'input',
     }
   ]
 
@@ -41,6 +34,7 @@ const DevFormComponent: FC<DevFormComponentProps> = ( { data, buttonLabel, onFor
   return (
     <FormWrapper<DevFormFields>
       onSubmitCb={ handleOnFormSubmit }
+      followInitialState
       { ...{ inputFields } }
       { ...props }
     />

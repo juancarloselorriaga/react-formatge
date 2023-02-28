@@ -40,6 +40,7 @@ const AppComponent: FC = () => {
         borderRadius={ 12 }
         p={ 6 }
         onFormSubmit={ handleFormSubmit }
+        data={ { input: formSize } }
       />
     </VStack>
   )
