@@ -14,7 +14,7 @@ export interface OptionSelectionProps extends SelectProps {
   wrapperProps?: StackProps
 }
 
-const OptionSelection: FC<OptionSelectionProps> = ( { options, label, alignItems, wrapperProps, ...selectProps } ) => {
+const OptionSelection: FC<OptionSelectionProps> = ( { options, alignItems, wrapperProps, ...selectProps } ) => {
   return (
     <VStack
       alignItems={ alignItems }
