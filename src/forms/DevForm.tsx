@@ -1,11 +1,12 @@
 import { StackProps } from '@chakra-ui/react'
 import { FormFieldType, OnFormSubmit } from '../types'
-import React, { FC, useState } from 'react'
+import React, { FC } from 'react'
 import FormWrapper from '../_layout/FormWrapper'
+import { formValidationRgx } from '../helpers/rgx'
 
 export type DevFormFields = {
-  field: string
-  otherField: string
+  email: string
+  password: string
 }
 
 interface DevFormComponentProps extends StackProps {
@@ -16,32 +17,37 @@ interface DevFormComponentProps extends StackProps {
 }
 
 const DevFormComponent: FC<DevFormComponentProps> = ( { data, buttonLabel, onFormSubmit, ...props } ) => {
-  const [ variable, setVariable ] = useState( '',
-  )
+
   const inputFields: FormFieldType<DevFormFields>[] = [
-    {
+   {
       componentType: 'input',
-      name: 'field',
-      label: 'field',
-      onValueChange: ( payload ) => setVariable( payload.value ),
-      initialValue: data?.field || '',
+      name: 'email',
+      label: 'email',
+      placeholder: 'type the email',
+      helperText: 'Login mail',
+      initialValue: '',
       validation: {
         required: true,
-      },
+        validator: {
+          regEx: formValidationRgx.email,
+          error: 'Invalid email format'
+        }
+      }
     },
-    ...(
-      variable === 'test' ? [
-        {
-          componentType: 'input' as const,
-          name: 'otherField' as const,
-          label: 'other field',
-          initialValue: data?.otherField || '',
-          validation: {
-            required: true,
-          },
-        },
-      ] : []
-    ),
+    {
+      componentType: 'input',
+      name: 'password',
+      label: 'password',
+      type: 'password',
+      initialValue: '',
+      validation: {
+        required: true,
+        validator: {
+          regEx: formValidationRgx.limitChars(4, 25),
+          error: 'The password must be 4 valid character long'
+        }
+      }
+    },
   ]
 
   const handleOnFormSubmit = async ( updatedData: Partial<DevFormFields> ) => {
