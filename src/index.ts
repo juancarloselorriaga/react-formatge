@@ -1,4 +1,5 @@
 import CheckboxComponent from './_components/CheckboxComponent'
+import OptionSelectionComponent from './_components/OptionSelection/OptionSelectionComponent'
 import DatePickerComponent from './_components/DateComponents/DatePickerComponent'
 import DateRangePickerComponent from './_components/DateComponents/DateRangePickerComponent'
 import FormItemWrapper from './_layout/FormItemWrapper'
@@ -10,6 +11,7 @@ export {
   DatePickerComponent,
   DateRangePickerComponent,
   CheckboxComponent,
+  OptionSelectionComponent,
   FormWrapper,
   FormItemWrapper,
   formValidationRgx,
