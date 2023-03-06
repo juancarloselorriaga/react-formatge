@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useMemo } from 'react'
+import React, { Fragment, useEffect, useMemo, useState } from 'react'
 import InputField from '../_components/InputField'
 import FormContainer from './FormContainer'
 import formSchema from '../form.schema'
@@ -10,6 +10,7 @@ import useInitialState from '../hooks/useInitialState'
 
 function FormWrapper<T>(
   {
+    formId,
     inputFields,
     buttonProps,
     error,
@@ -19,6 +20,7 @@ function FormWrapper<T>(
     followInitialState = false,
     ...props
   }: FormWrapperProps<T> ) {
+  const [ currentFormId, setCurrentFormId ] = useState<string | undefined>( formId )
   const { initialState, validationStateSchema } = formSchema<T>( inputFields )
 
   const formUpdate = useFormUpdate<T>( initialState, validationStateSchema, onSubmitCb )
@@ -44,11 +46,17 @@ function FormWrapper<T>(
   }, [ buttonProps, isEnabled ] )
 
   useEffect( () => {
-    onUpdate && onUpdate( {
-      updatedData,
-      isEnabled,
-    } )
-  }, [ onUpdate, updatedData, isEnabled ] )
+    if ( currentFormId === formId ) {
+      onUpdate && onUpdate( {
+        formId,
+        updatedData,
+        isEnabled,
+      } )
+    } else {
+      resetData()
+      setCurrentFormId(formId)
+    }
+  }, [ onUpdate, updatedData, isEnabled, formId, currentFormId ] )
 
 
   return (
