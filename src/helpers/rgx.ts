@@ -8,5 +8,5 @@ export const formValidationRgx = {
   validCharsWithLimit: (limit: number) => {
     return new RegExp(`^\\s*([0-9a-zA-Z\\s,\\-()'_@~&?!*=.ëüáéíóúÁÉÍÓÚäÄåÅöÖ\`]{1,${limit}})\\s*$`)
   },
-  upperCaseWithUnderscore: /^[A-Z]+(?:_[A-Z]+)*$/
+  upperCaseWithUnderscore: /^[A-Z]+(?:_[A-Z]+)*$/,
 }

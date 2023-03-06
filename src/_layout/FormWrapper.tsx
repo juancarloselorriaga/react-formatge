@@ -7,100 +7,82 @@ import useFormUpdate from '../hooks/useFormUpdate'
 import FormItemWrapper from './FormItemWrapper'
 import useInitialState from '../hooks/useInitialState'
 
+function FormWrapper<T>({
+  formId,
+  inputFields,
+  buttonProps,
+  error,
+  onSubmitCb,
+  onUpdate,
+  children,
+  followInitialState = false,
+  ...props
+}: FormWrapperProps<T>) {
+  const [currentFormId, setCurrentFormId] = useState<string | undefined>(formId)
+  const { initialState, validationStateSchema } = formSchema<T>(inputFields)
 
-function FormWrapper<T>(
-  {
-    formId,
-    inputFields,
-    buttonProps,
-    error,
-    onSubmitCb,
-    onUpdate,
-    children,
-    followInitialState = false,
-    ...props
-  }: FormWrapperProps<T> ) {
-  const [ currentFormId, setCurrentFormId ] = useState<string | undefined>( formId )
-  const { initialState, validationStateSchema } = formSchema<T>( inputFields )
+  const formUpdate = useFormUpdate<T>(initialState, validationStateSchema, onSubmitCb)
+  const { formData, updatedData, handleUpdateData, handleOnSubmit, isLoading, isEnabled, resetData } = formUpdate
 
-  const formUpdate = useFormUpdate<T>( initialState, validationStateSchema, onSubmitCb )
-  const {
-    formData,
-    updatedData,
-    handleUpdateData,
-    handleOnSubmit,
-    isLoading,
-    isEnabled,
-    resetData,
-  } = formUpdate
+  useInitialState(initialState, resetData, { paused: !followInitialState })
 
-  useInitialState( initialState, resetData, { paused: !followInitialState } )
-
-  const isButtonDisabled = useMemo( () => {
+  const isButtonDisabled = useMemo(() => {
     // the parent can configure extra isDisabled conditions if it includes isDisabled with additional logginc
-    if ( buttonProps && 'isDisabled' in buttonProps ) {
+    if (buttonProps && 'isDisabled' in buttonProps) {
       return !isEnabled || buttonProps.isDisabled
     } else {
       return !isEnabled
     }
-  }, [ buttonProps, isEnabled ] )
+  }, [buttonProps, isEnabled])
 
-  useEffect( () => {
-    if ( currentFormId === formId ) {
-      onUpdate && onUpdate( {
-        formId,
-        updatedData,
-        isEnabled,
-      } )
+  useEffect(() => {
+    if (currentFormId === formId) {
+      onUpdate &&
+        onUpdate({
+          formId,
+          updatedData,
+          isEnabled,
+        })
     } else {
       resetData()
       setCurrentFormId(formId)
     }
-  }, [ onUpdate, updatedData, isEnabled, formId, currentFormId ] )
-
+  }, [onUpdate, updatedData, isEnabled, formId, currentFormId])
 
   return (
     <FormContainer
-      buttonProps={ {
+      buttonProps={{
         ...buttonProps,
         isLoading,
         isDisabled: isButtonDisabled,
         onClick: handleOnSubmit,
-      } }
-      { ...{ error } }
-      { ...props }
+      }}
+      {...{ error }}
+      {...props}
     >
-      { inputFields.map( ( props ) => (
-        <Fragment key={ props.name.toString() }>
-          { ( () => {
-            switch ( props.componentType ) {
+      {inputFields.map((props) => (
+        <Fragment key={props.name.toString()}>
+          {(() => {
+            switch (props.componentType) {
               case 'input': {
-                const {
-                  componentType,
-                  initialValue,
-                  name,
-                  validation,
-                  value,
-                  onValueChange,
-                  ...restOfProps
-                } = props
+                const { componentType, initialValue, name, validation, value, onValueChange, ...restOfProps } = props
 
                 // if a value is passed, this will update its state within useFormUpdate hook
-                if ( typeof value === 'string' && formData[name]?.value !== value ) {
-                  handleUpdateData( { id: restOfProps.id, name, value } ).then()
+                if (typeof value === 'string' && formData[name]?.value !== value) {
+                  handleUpdateData({ id: restOfProps.id, name, value }).then()
                 }
 
                 return (
                   <InputField
-                    isRequired={ validation?.required }
-                    value={ formData[name]?.value?.toString() || '' }
-                    error={ formData[name]?.error }
-                    { ...restOfProps }
-                    onValueChange={ ( payload: HandleUpdateDataPayload<T, string> ) => {
-                      onValueChange && onValueChange( payload )
-                      handleUpdateData( payload ).then()
-                    } }
-                    { ...{ name } }
+                    isRequired={validation?.required}
+                    value={formData[name]?.value?.toString() || ''}
+                    error={formData[name]?.error}
+                    {...restOfProps}
+                    onValueChange={(payload: HandleUpdateDataPayload<T, string>) => {
+                      onValueChange && onValueChange(payload)
+                      handleUpdateData(payload).then()
+                    }}
+                    {...{ name }}
                   />
                 )
               }
@@ -111,26 +93,26 @@ function FormWrapper<T>(
                 const clonedComponentProps: CustomComponentImplementation<AnyFormType> = {
                   defaultValue: initialValue,
                   value: formData[name]?.value as AnyFormType,
-                  onUpdateValue: ( value ) =>
-                    handleUpdateData( {
+                  onUpdateValue: (value) =>
+                    handleUpdateData({
                       id: name,
                       name,
                       value,
-                    } ),
+                    }),
                 }
 
                 return (
                   <FormItemWrapper
-                    isRequired={ validation?.required }
-                    { ...{
+                    isRequired={validation?.required}
+                    {...{
                       name,
                       label,
                       helperText,
                       error,
                       noTopSpace,
-                    } }
+                    }}
                   >
-                    { React.cloneElement( component, clonedComponentProps ) }
+                    {React.cloneElement(component, clonedComponentProps)}
                   </FormItemWrapper>
                 )
               }
@@ -138,10 +120,10 @@ function FormWrapper<T>(
               default:
                 return props as never
             }
-          } )() }
+          })()}
         </Fragment>
-      ) ) }
-      { children }
+      ))}
+      {children}
     </FormContainer>
   )
 }

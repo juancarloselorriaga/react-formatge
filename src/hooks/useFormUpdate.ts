@@ -5,7 +5,7 @@ import { FormSchemaUpdatedDataState, FormSchemaValidationState, HandleUpdateData
 export interface FormUpdateHook<T> {
   formData: FormSchemaUpdatedDataState<T>
   updatedData: Partial<T>
-  handleUpdateData: <K>( payload: HandleUpdateDataPayload<T, K> ) => Promise<void>
+  handleUpdateData: <K>(payload: HandleUpdateDataPayload<T, K>) => Promise<void>
   isEnabled: boolean
   handleOnSubmit: () => void
   isLoading: boolean
@@ -15,102 +15,96 @@ export interface FormUpdateHook<T> {
 const useFormUpdate = <T>(
   initialState: FormSchemaUpdatedDataState<T>,
   validationSchema: FormSchemaValidationState<T>,
-  callback: ( updatedData: Partial<T>, formData: FormSchemaUpdatedDataState<T> )
-    => void | Promise<void> = () => undefined,
+  callback: (updatedData: Partial<T>, formData: FormSchemaUpdatedDataState<T>) => void | Promise<void> = () =>
+    undefined,
 ): FormUpdateHook<T> => {
+  const [isLoading, setButtonLoading] = useLoadingButton()
+  const [isEnabled, setIsEnabled] = useState<boolean>(false)
 
-  const [ isLoading, setButtonLoading ] = useLoadingButton()
-  const [ isEnabled, setIsEnabled ] = useState<boolean>( false )
+  const [formData, setFormData] = useReducer(
+    (state: FormSchemaUpdatedDataState<T>, newState: FormSchemaUpdatedDataState<T>) => ({ ...state, ...newState }),
+    initialState,
+  )
 
-  const [ formData, setFormData ] = useReducer(
-    (
-      state: FormSchemaUpdatedDataState<T>,
-      newState: FormSchemaUpdatedDataState<T>,
-    ) => ( { ...state, ...newState } ), initialState )
-
-  const [ updatedData, setUpdatedData ] = useReducer( (
-    state: Partial<T>,
-    newState: Partial<T> | null,
-  ) => {
-    if ( newState === null ) {
+  const [updatedData, setUpdatedData] = useReducer((state: Partial<T>, newState: Partial<T> | null) => {
+    if (newState === null) {
       return {}
     } else {
-      return ( { ...state, ...newState } )
+      return { ...state, ...newState }
     }
-  }, {} )
+  }, {})
 
-
-  const isStateValid = useMemo( () => {
-    return Object.keys( validationSchema ).some( ( key ) => {
+  const isStateValid = useMemo(() => {
+    return Object.keys(validationSchema).some((key) => {
       const k = key as keyof T
       const isRequired = validationSchema[k].required
 
       try {
         const { value, error } = formData[k]
-        return ( isRequired && !value ) || error
+        return (isRequired && !value) || error
       } catch {
         return false
       }
-    } )
-  }, [ formData, validationSchema ] )
+    })
+  }, [formData, validationSchema])
 
-  useEffect( () => {
-    setIsEnabled( !isStateValid )
-  }, [ isStateValid, setIsEnabled ] )
+  useEffect(() => {
+    setIsEnabled(!isStateValid)
+  }, [isStateValid, setIsEnabled])
 
-  const handleUpdateData = useCallback( async <K>( payload: HandleUpdateDataPayload<T, K> ) => {
+  const handleUpdateData = useCallback(
+    async <K>(payload: HandleUpdateDataPayload<T, K>) => {
       const { name, value, id } = payload
       const { required: isRequired, equalsField, validator } = validationSchema[name as keyof T]
       const isValueString = typeof value === 'string'
       const updatedDataPayload = { [name]: value } as Partial<T>
       let error = ''
 
-      if ( isRequired && !value ) {
+      if (isRequired && !value) {
         error = 'required'
       }
 
-      if ( !validator && equalsField ) {
-        if ( value !== formData[equalsField.field].value ) {
+      if (!validator && equalsField) {
+        if (value !== formData[equalsField.field].value) {
           error = equalsField.error
         }
 
         const formDataPayload = { [name]: { value, error, id } } as FormSchemaUpdatedDataState<T>
-        setFormData( formDataPayload )
-        setUpdatedData( updatedDataPayload )
+        setFormData(formDataPayload)
+        setUpdatedData(updatedDataPayload)
       }
 
-
-      if ( validator ) {
-        if ( isValueString && !validator.regEx.test( value ) ) {
+      if (validator) {
+        if (isValueString && !validator.regEx.test(value)) {
           error = validator.error
         }
       }
 
       const formDataPayload = { [name]: { value, error, id } } as FormSchemaUpdatedDataState<T>
-      setFormData( formDataPayload )
-      setUpdatedData( updatedDataPayload )
+      setFormData(formDataPayload)
+      setUpdatedData(updatedDataPayload)
     },
-    [ validationSchema, formData ],
+    [validationSchema, formData],
   )
 
-  const handleOnSubmit = useCallback( async () => {
-    setButtonLoading( true )
+  const handleOnSubmit = useCallback(async () => {
+    setButtonLoading(true)
 
-    if ( !isStateValid ) {
+    if (!isStateValid) {
       try {
-        await callback( updatedData, formData )
-      } catch ( error ) {
-        console.warn( 'Form submit error', error )
+        await callback(updatedData, formData)
+      } catch (error) {
+        console.warn('Form submit error', error)
       }
 
-      setButtonLoading( false )
+      setButtonLoading(false)
     }
-  }, [ setButtonLoading, isStateValid, callback, updatedData, formData ] )
+  }, [setButtonLoading, isStateValid, callback, updatedData, formData])
 
-  const resetData = useCallback( () => {
-    setFormData( initialState )
-    setUpdatedData( null )
-  }, [ initialState ] )
+  const resetData = useCallback(() => {
+    setFormData(initialState)
+    setUpdatedData(null)
+  }, [initialState])
 
   return {
     formData,

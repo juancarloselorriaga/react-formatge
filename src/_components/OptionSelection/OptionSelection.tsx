@@ -14,22 +14,15 @@ export interface OptionSelectionProps extends SelectProps {
   wrapperProps?: StackProps
 }
 
-const OptionSelection: FC<OptionSelectionProps> = ( { options, alignItems, wrapperProps, ...selectProps } ) => {
+const OptionSelection: FC<OptionSelectionProps> = ({ options, alignItems, wrapperProps, ...selectProps }) => {
   return (
-    <VStack
-      alignItems={ alignItems }
-      w='100%' { ...wrapperProps }>
-      <Select
-        variant='filled'
-        { ...selectProps }>
-        { options?.map( ( { value, label } ) => (
-          <option
-            key={ value }
-            value={ value ?? '' }
-          >
-            { label }
+    <VStack alignItems={alignItems} w='100%' {...wrapperProps}>
+      <Select variant='filled' {...selectProps}>
+        {options?.map(({ value, label }) => (
+          <option key={value} value={value ?? ''}>
+            {label}
           </option>
-        ) ) }
+        ))}
       </Select>
     </VStack>
   )

@@ -3,7 +3,7 @@ class InitialStateSingleton {
   private inViewFormInitialState = ''
 
   public static getInstance(): InitialStateSingleton {
-    if ( !InitialStateSingleton.instance ) {
+    if (!InitialStateSingleton.instance) {
       InitialStateSingleton.instance = new InitialStateSingleton()
     }
 
@@ -14,11 +14,9 @@ class InitialStateSingleton {
     return this.inViewFormInitialState
   }
 
-  public setInitialState( initialState: string ) {
+  public setInitialState(initialState: string) {
     this.inViewFormInitialState = initialState
   }
-
 }
-
 
 export default InitialStateSingleton.getInstance()

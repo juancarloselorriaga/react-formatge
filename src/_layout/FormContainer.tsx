@@ -14,9 +14,7 @@ const FormContainer: FC<IFormContainer> = ({ error, children, buttonProps, ...pr
 
       {buttonProps && (
         <Flex justifyContent='flex-end' pt={4}>
-          <Button {...buttonProps}>
-            {buttonProps.children || 'Save'}
-          </Button>
+          <Button {...buttonProps}>{buttonProps.children || 'Save'}</Button>
         </Flex>
       )}
 

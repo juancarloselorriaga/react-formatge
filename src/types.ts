@@ -4,8 +4,7 @@ import { InputFieldProps } from './_components/InputField'
 import { FormItemWrapperProps } from './_layout/FormItemWrapper'
 import { FormUpdateHook } from './hooks/useFormUpdate'
 
-export type AnyFormType = string | number | undefined | boolean | null | Date | [ Date, Date ]
-
+export type AnyFormType = string | number | undefined | boolean | null | Date | [Date, Date]
 
 // ********* Schemas **********
 export interface FormSchemaUpdatedData<T> {
@@ -26,7 +25,6 @@ export interface FormSchemaValidation<T> {
   }
 }
 
-
 // ********* Hooks **********
 export type FormSchemaUpdatedDataState<T> = Record<keyof T, FormSchemaUpdatedData<unknown>>
 export type FormSchemaValidationState<T> = Record<keyof T, FormSchemaValidation<T>>
@@ -36,10 +34,8 @@ export type HandleUpdateDataPayload<T, K> = {
   id?: string | null
 }
 
-
 // ********* Forms **********
-export type OnFormSubmit<T> = ( formData: T ) => Promise<void> | void
-
+export type OnFormSubmit<T> = (formData: T) => Promise<void> | void
 
 //********** Form Wrapper ***********
 export type FormUpdatePayload<T> = Pick<FormUpdateHook<T>, 'updatedData' | 'isEnabled'> & {
@@ -48,15 +44,14 @@ export type FormUpdatePayload<T> = Pick<FormUpdateHook<T>, 'updatedData' | 'isEn
 
 export type FormWrapperProps<T> = StackProps & {
   inputFields: FormFieldType<T>[]
-  onSubmitCb?: ( updatedData: Partial<T>, formData: FormSchemaUpdatedDataState<T> ) => Promise<void>
+  onSubmitCb?: (updatedData: Partial<T>, formData: FormSchemaUpdatedDataState<T>) => Promise<void>
   buttonProps?: ButtonProps
   error?: string
-  onUpdate?: ( payload: FormUpdatePayload<T> ) => void | Promise<void>
+  onUpdate?: (payload: FormUpdatePayload<T>) => void | Promise<void>
   // property passed to be
   followInitialState?: boolean
   formId?: string
 }
-
 
 //********** Form Fields ***********
 export type FormFieldBaseType<T> = {
@@ -67,22 +62,23 @@ export type FormFieldBaseType<T> = {
 
 export type FormFieldType<T> = ComponentFormField<T> | InputFormField<T>
 
-export type ComponentFormField<T> = FormFieldBaseType<T> & FormItemWrapperProps & {
-  componentType: 'component'
-  component: ReactElement<CustomComponentImplementation<AnyFormType>>
-}
+export type ComponentFormField<T> = FormFieldBaseType<T> &
+  FormItemWrapperProps & {
+    componentType: 'component'
+    component: ReactElement<CustomComponentImplementation<AnyFormType>>
+  }
 
-export type InputFormField<T> = FormFieldBaseType<T> & InputFieldProps & {
-  componentType: 'input'
-  ref?: React.RefObject<HTMLInputElement>
-  onValueChange?: ( payload: HandleUpdateDataPayload<T, string> ) => void
-}
-
+export type InputFormField<T> = FormFieldBaseType<T> &
+  InputFieldProps & {
+    componentType: 'input'
+    ref?: React.RefObject<HTMLInputElement>
+    onValueChange?: (payload: HandleUpdateDataPayload<T, string>) => void
+  }
 
 //********** Custom or Extra Components ***********
 // A component should extend this type in order to make an integration with the form
 export interface CustomComponentImplementation<T> {
   value?: T
   defaultValue?: T
-  onUpdateValue?: ( value: T ) => void
+  onUpdateValue?: (value: T) => void
 }

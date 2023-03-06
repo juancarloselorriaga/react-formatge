@@ -1,17 +1,17 @@
 import { useEffect, useState } from 'react'
 
-type HookReturnType = [ isButtonLoading: boolean, setButtonLoader: ( bool: boolean ) => void ]
+type HookReturnType = [isButtonLoading: boolean, setButtonLoader: (bool: boolean) => void]
 
 const useLoadingButton = (): HookReturnType => {
-  const [ isButtonLoading, setButtonLoading ] = useState<boolean>( false )
+  const [isButtonLoading, setButtonLoading] = useState<boolean>(false)
 
-  useEffect( () => {
+  useEffect(() => {
     return () => {
-      setButtonLoading( false )
+      setButtonLoading(false)
     }
-  }, [ setButtonLoading ] )
+  }, [setButtonLoading])
 
-  return [ isButtonLoading, setButtonLoading ]
+  return [isButtonLoading, setButtonLoading]
 }
 
 export default useLoadingButton
