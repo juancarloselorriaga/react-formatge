@@ -42,7 +42,10 @@ export type OnFormSubmit<T> = ( formData: T ) => Promise<void> | void
 
 
 //********** Form Wrapper ***********
-export type FormUpdatePayload<T> = Pick<FormUpdateHook<T>, 'updatedData' | 'isEnabled'>
+export type FormUpdatePayload<T> = Pick<FormUpdateHook<T>, 'updatedData' | 'isEnabled'> & {
+  formId?: string
+}
+
 export type FormWrapperProps<T> = StackProps & {
   inputFields: FormFieldType<T>[]
   onSubmitCb?: ( updatedData: Partial<T>, formData: FormSchemaUpdatedDataState<T> ) => Promise<void>
@@ -51,6 +54,7 @@ export type FormWrapperProps<T> = StackProps & {
   onUpdate?: ( payload: FormUpdatePayload<T> ) => void | Promise<void>
   // property passed to be
   followInitialState?: boolean
+  formId?: string
 }
 
 

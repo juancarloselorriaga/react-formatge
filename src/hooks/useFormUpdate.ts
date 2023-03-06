@@ -30,8 +30,14 @@ const useFormUpdate = <T>(
 
   const [ updatedData, setUpdatedData ] = useReducer( (
     state: Partial<T>,
-    newState: Partial<T>,
-  ) => ( { ...state, ...newState } ), {} )
+    newState: Partial<T> | null,
+  ) => {
+    if ( newState === null ) {
+      return {}
+    } else {
+      return ( { ...state, ...newState } )
+    }
+  }, {} )
 
 
   const isStateValid = useMemo( () => {
@@ -103,6 +109,7 @@ const useFormUpdate = <T>(
 
   const resetData = useCallback( () => {
     setFormData( initialState )
+    setUpdatedData( null )
   }, [ initialState ] )
 
   return {
