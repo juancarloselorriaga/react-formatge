@@ -2,9 +2,10 @@ import { StackProps } from '@chakra-ui/react'
 import { FormFieldType, OnFormSubmit } from '../types'
 import React, { FC } from 'react'
 import FormWrapper from '../_layout/FormWrapper'
+import { formValidationRgx } from '../helpers/rgx'
 
 export type DevFormFields = {
-  input: string
+  description: string
 }
 
 interface DevFormComponentProps extends StackProps {
@@ -17,24 +18,33 @@ interface DevFormComponentProps extends StackProps {
 const DevFormComponent: FC<DevFormComponentProps> = ( { data, buttonLabel, onFormSubmit, ...props } ) => {
 
   const inputFields: FormFieldType<DevFormFields>[] = [
-    {
-      name: 'input',
-      label: 'input',
-      initialValue: data?.input || '',
+{
+      name: 'description',
       componentType: 'input',
-    }
+      label: 'description (SEO)',
+      placeholder: 'type an optional description',
+      initialValue: '',
+      validation: {
+        required: false,
+        validator: {
+          regEx: formValidationRgx.limitChars( 0, 10 ),
+          error: 'The character limit is 250'
+        }
+      }
+    },
   ]
 
   const handleOnFormSubmit = async ( updatedData: Partial<DevFormFields> ) => {
     if ( !onFormSubmit ) return
     await onFormSubmit( updatedData )
-    console.log(updatedData)
+    console.log( updatedData )
   }
 
   return (
     <FormWrapper<DevFormFields>
       onSubmitCb={ handleOnFormSubmit }
       followInitialState
+      onUpdate={ ( data: any ) => console.log( data ) }
       { ...{ inputFields } }
       { ...props }
     />
