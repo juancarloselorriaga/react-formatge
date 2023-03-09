@@ -1,7 +1,7 @@
 export const formValidationRgx = {
   email: /^\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/,
   limitChars: (minChars: number, maxChars: number) => {
-    return new RegExp(`^(\\S){${minChars},${maxChars}}$`)
+    return new RegExp(`^.{${minChars},${maxChars}}$`)
   },
   onlyNumbers: /^\d+$/,
   floatNumber: /[+-]?([0-9]*[.])?[0-9]+/,
