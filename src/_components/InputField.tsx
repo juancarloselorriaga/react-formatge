@@ -46,6 +46,7 @@ const InputField = forwardRef<HTMLInputElement | null, InputFieldProps>(
         variant: 'outline',
         bg: 'white',
         size: 'md',
+        isDisabled: props.isDisabled
       }
 
       const dict = {
