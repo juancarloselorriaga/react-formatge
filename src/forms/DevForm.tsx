@@ -2,10 +2,9 @@ import { StackProps } from '@chakra-ui/react'
 import { FormFieldType, OnFormSubmit } from '../types'
 import React, { FC } from 'react'
 import FormWrapper from '../_layout/FormWrapper'
-import DateRangePickerComponent from '../_components/DateComponents/DateRangePickerComponent'
 
 export type DevFormFields = {
-  dates: [Date, Date]
+  description: string
 }
 
 interface DevFormComponentProps extends StackProps {
@@ -19,20 +18,14 @@ const DevFormComponent: FC<DevFormComponentProps> = ( { data, buttonLabel, onFor
 
   const inputFields: FormFieldType<DevFormFields>[] = [
     {
-      name: 'dates' as const,
-      componentType: 'component' as const,
-      label: 'Start and end date',
-      initialValue: [ new Date(), new Date() ] as [ Date, Date ],
+      name: 'description',
+      componentType: 'input',
+      initialValue: 'description',
+      textarea: true,
+      isDisabled: true,
       validation: {
-        required: false,
+        required: true,
       },
-      component: (
-        <DateRangePickerComponent
-          isDisabled
-          title={ 'Start and end date' }
-        />
-      ),
-
     },
   ]
 
