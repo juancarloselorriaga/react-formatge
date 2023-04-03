@@ -2,10 +2,10 @@ import { StackProps } from '@chakra-ui/react'
 import { FormFieldType, OnFormSubmit } from '../types'
 import React, { FC } from 'react'
 import FormWrapper from '../_layout/FormWrapper'
-import { formValidationRgx } from '../helpers/rgx'
+import DateRangePickerComponent from '../_components/DateComponents/DateRangePickerComponent'
 
 export type DevFormFields = {
-  description: string
+  dates: [Date, Date]
 }
 
 interface DevFormComponentProps extends StackProps {
@@ -18,19 +18,21 @@ interface DevFormComponentProps extends StackProps {
 const DevFormComponent: FC<DevFormComponentProps> = ( { data, buttonLabel, onFormSubmit, ...props } ) => {
 
   const inputFields: FormFieldType<DevFormFields>[] = [
-{
-      name: 'description',
-      componentType: 'input',
-      label: 'description (SEO)',
-      placeholder: 'type an optional description',
-      initialValue: '',
+    {
+      name: 'dates' as const,
+      componentType: 'component' as const,
+      label: 'Start and end date',
+      initialValue: [ new Date(), new Date() ] as [ Date, Date ],
       validation: {
         required: false,
-        validator: {
-          regEx: formValidationRgx.limitChars( 0, 10 ),
-          error: 'The character limit is 250'
-        }
-      }
+      },
+      component: (
+        <DateRangePickerComponent
+          isDisabled
+          title={ 'Start and end date' }
+        />
+      ),
+
     },
   ]
 
