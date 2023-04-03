@@ -8,9 +8,10 @@ interface DateComponentWrapperProps extends Partial<PopoverComponentProps> {
   title: string
   value?: string | number | readonly string[]
   children: ReactNode
+  isDisabled?: boolean
 }
 
-const DateComponentWrapper: FC<DateComponentWrapperProps> = ({ value, children, ...props }) => {
+const DateComponentWrapper: FC<DateComponentWrapperProps> = ({ value, children, isDisabled, ...props }) => {
   return (
     <PopoverComponent
       target={
@@ -20,7 +21,7 @@ const DateComponentWrapper: FC<DateComponentWrapperProps> = ({ value, children, 
           borderColor={'primary'}
           name={'date-picker-input'}
           bg='background.default'
-          {...{ value }}
+          {...{ value, isDisabled }}
         />
       }
       contentProps={{
