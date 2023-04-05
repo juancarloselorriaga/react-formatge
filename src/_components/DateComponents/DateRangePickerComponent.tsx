@@ -10,6 +10,7 @@ interface DatePickerComponentProps extends CustomComponentImplementation<[Date, 
   title: string
   onChange?: (dates: DatePickerRangeDate) => void
   dateDisplayFormat?: string
+  isDisabled?: boolean
 }
 
 const DateRangePickerComponent: FC<DatePickerComponentProps> = ({
