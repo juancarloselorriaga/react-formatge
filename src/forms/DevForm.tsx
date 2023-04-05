@@ -2,10 +2,11 @@ import { StackProps } from '@chakra-ui/react'
 import { FormFieldType, OnFormSubmit } from '../types'
 import React, { FC } from 'react'
 import FormWrapper from '../_layout/FormWrapper'
-import { formValidationRgx } from '../helpers/rgx'
+import MultipleOptionSelectionComponent from '../_components/OptionSelection/MultipleOptionSelectionComponent'
+import { IOption } from '../_components/OptionSelection/OptionSelection'
 
 export type DevFormFields = {
-  description: string
+  selected: IOption[]
 }
 
 interface DevFormComponentProps extends StackProps {
@@ -18,33 +19,45 @@ interface DevFormComponentProps extends StackProps {
 const DevFormComponent: FC<DevFormComponentProps> = ( { data, buttonLabel, onFormSubmit, ...props } ) => {
 
   const inputFields: FormFieldType<DevFormFields>[] = [
-{
-      name: 'description',
-      componentType: 'input',
-      label: 'description (SEO)',
-      placeholder: 'type an optional description',
-      initialValue: '',
+    {
+      name: 'selected',
+      componentType: 'component',
+      label: 'Status',
+      initialValue: [ { label: 'New', value: 'NEW' }, { label: 'Planned', value: 'PLANNED' } ],
       validation: {
         required: false,
-        validator: {
-          regEx: formValidationRgx.limitChars( 0, 10 ),
-          error: 'The character limit is 250'
-        }
-      }
+      },
+      component: (
+        <MultipleOptionSelectionComponent
+          items={
+            [
+              { label: 'New', value: 'NEW' },
+              { label: 'Planned', value: 'PLANNED' },
+              { label: 'Started', value: 'STARTED' },
+              { label: 'Done', value: 'DONE' },
+              { label: 'New1', value: 'NEW1' },
+              { label: 'Planned1', value: 'PLANNED1' },
+              { label: 'Started1', value: 'STARTED1' },
+              { label: 'Done1', value: 'DONE1' },
+              { label: 'New2', value: 'NEW2' },
+              { label: 'Planned2', value: 'PLANNED2' },
+              { label: 'Started2', value: 'STARTED2' },
+              { label: 'Done2', value: 'DONE2' },
+
+            ] }
+        />
+      ),
     },
   ]
 
   const handleOnFormSubmit = async ( updatedData: Partial<DevFormFields> ) => {
     if ( !onFormSubmit ) return
     await onFormSubmit( updatedData )
-    console.log( updatedData )
   }
 
   return (
     <FormWrapper<DevFormFields>
       onSubmitCb={ handleOnFormSubmit }
-      followInitialState
-      onUpdate={ ( data: any ) => console.log( data ) }
       { ...{ inputFields } }
       { ...props }
     />
