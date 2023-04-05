@@ -3,8 +3,9 @@ import React, { ReactElement } from 'react'
 import { InputFieldProps } from './_components/InputField'
 import { FormItemWrapperProps } from './_layout/FormItemWrapper'
 import { FormUpdateHook } from './hooks/useFormUpdate'
+import { IOption } from './_components/OptionSelection/OptionSelection'
 
-export type AnyFormType = string | number | undefined | boolean | null | Date | [Date, Date]
+export type AnyFormType = string | number | undefined | boolean | null | Date | [ Date, Date ] | IOption[]
 
 // ********* Schemas **********
 export interface FormSchemaUpdatedData<T> {
