@@ -21,7 +21,9 @@ const OptionSelection: FC<OptionSelectionProps> = ( { options, alignItems, wrapp
       w='100%' { ...wrapperProps }>
       <Select
         variant='filled'
-        { ...selectProps }>
+        onChange={(e: any) => console.log(e.target.value)}
+        { ...selectProps }
+      >
         { options?.map( ( { value, label } ) => (
           <option
             key={ value }
