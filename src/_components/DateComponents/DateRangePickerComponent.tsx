@@ -1,55 +1,76 @@
-import React, { FC } from 'react'
+import React, { FC, useCallback, useMemo } from 'react'
 import { DateRange, Range, RangeKeyDict } from 'react-date-range'
 import { formatDate } from '../../helpers/utils'
 import DateComponentWrapper from './DateComponentWrapper'
 import { CustomComponentImplementation } from '../../types'
 
-type DatePickerRangeDate = [Date, Date]
+type DatePickerRangeDate = [ Date, Date ]
 
-interface DatePickerComponentProps extends CustomComponentImplementation<[Date, Date]> {
+interface DatePickerComponentProps extends CustomComponentImplementation<[ Date, Date ]> {
   title: string
-  onChange?: (dates: DatePickerRangeDate) => void
+  onChange?: ( dates: DatePickerRangeDate ) => void
   dateDisplayFormat?: string
   isDisabled?: boolean
 }
 
-const DateRangePickerComponent: FC<DatePickerComponentProps> = ({
-  title,
-  onChange,
-  dateDisplayFormat,
-  defaultValue,
-  value,
-  onUpdateValue,
-  ...props
-}) => {
-  const updateRange = (range: Range[]) => {
-    onChange && onChange([range[0].startDate!, range[0].endDate!])
-    onUpdateValue && onUpdateValue([range[0].startDate!, range[0].endDate!])
+const DateRangePickerComponent: FC<DatePickerComponentProps> = ( {
+                                                                   title,
+                                                                   onChange,
+                                                                   dateDisplayFormat,
+                                                                   defaultValue,
+                                                                   value,
+                                                                   onUpdateValue,
+                                                                   ...props
+                                                                 } ) => {
+  const updateRange = ( range: Range[] ) => {
+    onChange && onChange( [ range[0].startDate!, range[0].endDate! ] )
+    onUpdateValue && onUpdateValue( [ range[0].startDate!, range[0].endDate! ] )
   }
 
-  if (!defaultValue) {
+  const date = useCallback( ( pos: number ) => {
+    if ( value ) {
+      return formatDate( value[pos] )
+    } else {
+      if ( defaultValue ) {
+        return formatDate( defaultValue[pos] )
+      }
+    }
+
     return null
-  }
+
+  }, [value] )
+
+  const dateValue = useMemo(() => {
+    if ( date(0) !== null  ) {
+      if ( date(1) !== null ) {
+        return `${ date( 0 ) } | ${ date( 1 ) }`
+      } else {
+          return `${ date( 0 ) }`
+      }
+    } else {
+      return '-'
+    }
+  }, [date])
 
   return (
     <DateComponentWrapper
-      value={`${formatDate(value ? value[0] : defaultValue[0])} | ${formatDate(value ? value[1] : defaultValue[1])}`}
-      {...{ title }}
-      {...props}
+      value={ dateValue }
+      { ...{ title } }
+      { ...props }
     >
       <DateRange
-        editableDateInputs={true}
-        onChange={(item: RangeKeyDict) => updateRange([item.selection])}
+        editableDateInputs={ true }
+        onChange={ ( item: RangeKeyDict ) => updateRange( [ item.selection ] ) }
         moveRangeOnFirstSelection
-        ranges={[
+        ranges={ [
           {
-            startDate: (value && value[0]) || new Date(),
-            endDate: (value && value[1]) || new Date(),
+            startDate: ( value && value[0] ) || new Date(),
+            endDate: ( value && value[1] ) || new Date(),
             key: 'selection',
           },
-        ]}
-        rangeColors={['primary', 'primary']}
-        {...{ dateDisplayFormat }}
+        ] }
+        rangeColors={ [ 'primary', 'primary' ] }
+        { ...{ dateDisplayFormat } }
       />
     </DateComponentWrapper>
   )
