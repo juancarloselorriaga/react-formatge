@@ -2,11 +2,10 @@ import { StackProps } from '@chakra-ui/react'
 import { FormFieldType, OnFormSubmit } from '../types'
 import React, { FC } from 'react'
 import FormWrapper from '../_layout/FormWrapper'
-import MultipleOptionSelectionComponent from '../_components/OptionSelection/MultipleOptionSelectionComponent'
-import { IOption } from '../_components/OptionSelection/OptionSelection'
+import DateRangePickerComponent from '../_components/DateComponents/DateRangePickerComponent'
 
 export type DevFormFields = {
-  selected: IOption[]
+  originalPlannedDates: null | [Date,  Date]
 }
 
 interface DevFormComponentProps extends StackProps {
@@ -19,34 +18,19 @@ interface DevFormComponentProps extends StackProps {
 const DevFormComponent: FC<DevFormComponentProps> = ( { data, buttonLabel, onFormSubmit, ...props } ) => {
 
   const inputFields: FormFieldType<DevFormFields>[] = [
-    {
-      name: 'selected',
+  {
+      name: 'originalPlannedDates',
       componentType: 'component',
-      label: 'Status',
-      initialValue: [ { label: 'New', value: 'NEW' }, { label: 'Planned', value: 'PLANNED' } ],
+      label: 'Planned start and end date',
+      initialValue: null,
       validation: {
-        required: false,
+        required: false
       },
       component: (
-        <MultipleOptionSelectionComponent
-          items={
-            [
-              { label: 'New', value: 'NEW' },
-              { label: 'Planned', value: 'PLANNED' },
-              { label: 'Started', value: 'STARTED' },
-              { label: 'Done', value: 'DONE' },
-              { label: 'New1', value: 'NEW1' },
-              { label: 'Planned1', value: 'PLANNED1' },
-              { label: 'Started1', value: 'STARTED1' },
-              { label: 'Done1', value: 'DONE1' },
-              { label: 'New2', value: 'NEW2' },
-              { label: 'Planned2', value: 'PLANNED2' },
-              { label: 'Started2', value: 'STARTED2' },
-              { label: 'Done2', value: 'DONE2' },
-
-            ] }
-        />
-      ),
+          <DateRangePickerComponent
+              title={ 'Originally planned start and end date' }
+          />
+      )
     },
   ]
 
