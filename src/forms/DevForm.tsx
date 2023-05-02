@@ -6,6 +6,7 @@ import DateRangePickerComponent from '../_components/DateComponents/DateRangePic
 
 export type DevFormFields = {
   originalPlannedDates: null | [Date,  Date]
+  originalChangeCost: string
 }
 
 interface DevFormComponentProps extends StackProps {
@@ -31,6 +32,16 @@ const DevFormComponent: FC<DevFormComponentProps> = ( { data, buttonLabel, onFor
               title={ 'Originally planned start and end date' }
           />
       )
+    },
+    {
+      name: 'originalChangeCost',
+      componentType: 'input',
+      label: 'Originally planned change cost',
+      placeholder: 'Enter change cost',
+      initialValue: '0',
+      validation: {
+        required: false
+      },
     },
   ]
 
