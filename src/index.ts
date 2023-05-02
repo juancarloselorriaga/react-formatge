@@ -5,7 +5,7 @@ import DateRangePickerComponent from './_components/DateComponents/DateRangePick
 import FormItemWrapper from './_layout/FormItemWrapper'
 import FormWrapper from './_layout/FormWrapper'
 import { formValidationRgx } from './helpers/rgx'
-import { slugify, uppercasefy, formatDate, titleCasify } from './helpers/utils'
+import { slugify, uppercasefy, formatDate, titleCasify, parseInitialValue } from './helpers/utils'
 import RadioButtonsComponent from './_components/RadioButtonsComponent'
 import MultipleOptionSelectionComponent from './_components/OptionSelection/MultipleOptionSelectionComponent'
 
@@ -23,4 +23,5 @@ export {
   uppercasefy,
   formatDate,
   titleCasify,
+  parseInitialValue
 }
