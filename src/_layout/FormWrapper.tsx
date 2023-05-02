@@ -6,6 +6,7 @@ import { AnyFormType, CustomComponentImplementation, FormWrapperProps, HandleUpd
 import useFormUpdate from '../hooks/useFormUpdate'
 import FormItemWrapper from './FormItemWrapper'
 import useInitialState from '../hooks/useInitialState'
+import { parseInitialValue } from '../helpers/utils'
 
 function FormWrapper<T>({
   formId,
@@ -45,7 +46,7 @@ function FormWrapper<T>({
         })
     } else {
       resetData()
-      setCurrentFormId(formId)
+      setCurrentFormId( formId )
     }
   }, [onUpdate, updatedData, isEnabled, formId, currentFormId])
 
@@ -75,7 +76,7 @@ function FormWrapper<T>({
                 return (
                   <InputField
                     isRequired={validation?.required}
-                    value={formData[name]?.value?.toString() || ''}
+                    value={ parseInitialValue( formData[name]?.value as AnyFormType ) }
                     error={formData[name]?.error}
                     {...restOfProps}
                     onValueChange={(payload: HandleUpdateDataPayload<T, string>) => {
