@@ -1,7 +1,5 @@
 import React, { FC, ReactNode } from 'react'
 import { Input } from '@chakra-ui/react'
-import 'react-date-range/dist/styles.css'
-import 'react-date-range/dist/theme/default.css'
 import PopoverComponent, { PopoverComponentProps } from '../PopOver'
 
 interface DateComponentWrapperProps extends Partial<PopoverComponentProps> {
