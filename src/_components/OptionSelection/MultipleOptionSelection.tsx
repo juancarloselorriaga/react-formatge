@@ -1,4 +1,4 @@
-import { Checkbox, HStack, Input, StackProps } from '@chakra-ui/react'
+import { Checkbox, HStack, Input } from '@chakra-ui/react'
 import React, { FC, useEffect, useMemo } from 'react'
 import { IOption } from './OptionSelection'
 import TextComponent from '../TextComponent'
@@ -11,16 +11,12 @@ export interface MultipleOptionSelectionProps extends Partial<PopoverComponentPr
   onUpdate: ( payload: IOption[] ) => void
   placeholder?: string
   label?: string
-  alignItems?: string
-  wrapperProps?: StackProps
 }
 
 const MultipleOptionSelection: FC<MultipleOptionSelectionProps> = (
   {
     defaultSelected,
     options,
-    alignItems,
-    wrapperProps,
     placeholder,
     onUpdate,
     ...selectProps
