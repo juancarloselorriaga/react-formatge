@@ -38,7 +38,7 @@ const DateRangePickerComponent: FC<DatePickerComponentProps> = ( {
 
     return null
 
-  }, [value] )
+  }, [value, defaultValue] )
 
   const dateValue = useMemo(() => {
     if ( date(0) !== null  ) {
