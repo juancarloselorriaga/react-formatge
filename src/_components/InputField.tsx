@@ -1,4 +1,4 @@
-import React, { forwardRef, LegacyRef } from 'react'
+import React, { forwardRef, InputHTMLAttributes, LegacyRef } from 'react'
 import {
   Box,
   Input,
@@ -14,30 +14,29 @@ import {
 import FormItemWrapper, { FormItemWrapperProps } from '../_layout/FormItemWrapper'
 import { HandleUpdateDataPayload } from '../types'
 
-export type InputFieldProps =
-  ( InputProps | NumberInputProps ) &
+export type InputFieldProps = Omit<InputHTMLAttributes<HTMLInputElement>, 'size'> &
+  (InputProps | NumberInputProps) &
   FormItemWrapperProps & {
   name: string
   textarea?: boolean
-  type?: 'number' | 'textarea' | 'input'
-  onValueChange?: ( payload: HandleUpdateDataPayload<any, string> ) => void
+  onValueChange?: (payload: HandleUpdateDataPayload<any, string>) => void
 }
 
 const InputField = forwardRef<HTMLInputElement | null, InputFieldProps>(
-  ( { name, textarea, label, isRequired, error, noTopSpace, helperText, onValueChange, ...props }, ref ) => {
-    const [ _, setValue ] = React.useState( props.defaultValue?.toString() || '' )
+  ({ name, textarea, label, isRequired, error, noTopSpace, helperText, onValueChange, ...props }, ref) => {
+    const [_, setValue] = React.useState(props.defaultValue?.toString() || '')
 
-    const handleNumberInputChange = ( valueString: string ) => {
-      setValue( valueString )
+    const handleNumberInputChange = (valueString: string) => {
+      setValue(valueString)
       onValueChange &&
-      onValueChange( {
+      onValueChange({
         id: name,
         name,
         value: valueString,
-      } )
+      })
     }
 
-    const inputComponentFactory = ( type: 'number' | 'textarea' | 'input' ) => {
+    const inputComponentFactory = (type: 'number' | 'textarea' | 'input') => {
       const sharedProps = {
         id: name,
         name,
@@ -47,16 +46,16 @@ const InputField = forwardRef<HTMLInputElement | null, InputFieldProps>(
         variant: 'outline',
         bg: 'white',
         size: 'md',
-        isDisabled: props.isDisabled,
+        isDisabled: props.isDisabled
       }
 
       const dict = {
         number: (
           <NumberInput
-            { ...sharedProps }
-            { ...{ ref } }
-            onChange={ handleNumberInputChange }
-            value={ props.value as string | number | undefined }
+            {...sharedProps}
+            {...{ ref }}
+            onChange={handleNumberInputChange}
+            value={props.value as string | number | undefined}
           >
             <NumberInputField />
             <NumberInputStepper>
@@ -67,15 +66,14 @@ const InputField = forwardRef<HTMLInputElement | null, InputFieldProps>(
         ),
         textarea: (
           <Textarea
-            ref={ ref as unknown as LegacyRef<HTMLTextAreaElement> | undefined }
-            { ...sharedProps }
-            onChange={ ( e ) => handleNumberInputChange( e.target.value ) }
-            value={ props.value }
+            ref={ref as unknown as LegacyRef<HTMLTextAreaElement> | undefined}
+            {...sharedProps}
+            onChange={(e) => handleNumberInputChange(e.target.value)}
+            value={props.value}
           />
         ),
         input: (
-          <Input { ...sharedProps } { ...props } { ...{ ref } }
-                 onChange={ ( e ) => handleNumberInputChange( e.target.value ) } />
+          <Input {...sharedProps} {...props} {...{ ref }} onChange={(e) => handleNumberInputChange(e.target.value)} />
         ),
       }
 
@@ -83,7 +81,7 @@ const InputField = forwardRef<HTMLInputElement | null, InputFieldProps>(
     }
 
     const inputComponentTypeFactory = () => {
-      switch ( true ) {
+      switch (true) {
         case props.type === 'number':
           return 'number'
 
@@ -96,18 +94,18 @@ const InputField = forwardRef<HTMLInputElement | null, InputFieldProps>(
     }
 
     return (
-      <Box mt={ 2 } w='100%'>
+      <Box mt={2} w='100%'>
         <FormItemWrapper
-          { ...{
+          {...{
             name,
             label,
             isRequired,
             error,
             noTopSpace,
             helperText,
-          } }
+          }}
         >
-          { inputComponentFactory( inputComponentTypeFactory() ) }
+          {inputComponentFactory(inputComponentTypeFactory())}
         </FormItemWrapper>
       </Box>
     )
