@@ -2,11 +2,12 @@ import { StackProps } from '@chakra-ui/react'
 import { FormFieldType, OnFormSubmit } from '../types'
 import React, { FC } from 'react'
 import FormWrapper from '../_layout/FormWrapper'
+import DatePickerComponent from '../_components/DateComponents/DatePickerComponent'
 
 export type DevFormFields = {
   name: string
   title: string
-  description: string
+  date: Date | null
 }
 
 interface DevFormComponentProps extends StackProps {
@@ -35,12 +36,14 @@ const DevFormComponent: FC<DevFormComponentProps> = ( { data, buttonLabel, onFor
 
     },
     {
-      name: 'description',
-      componentType: 'input',
-      label: 'Description',
-      placeholder: 'Enter description',
-      initialValue: '',
-    },
+      name: 'date',
+      componentType: 'component',
+      label: 'Date',
+      initialValue: null,
+      component: (
+        <DatePickerComponent title="Date" />
+      )
+    }
   ]
 
   const handleOnFormSubmit = async ( updatedData: Partial<DevFormFields> ) => {
@@ -51,15 +54,6 @@ const DevFormComponent: FC<DevFormComponentProps> = ( { data, buttonLabel, onFor
   return (
     <FormWrapper<DevFormFields>
       w='full'
-      bg='red'
-      maxH={ 200 }
-      flexWrap='wrap'
-      sx={{
-        '.rf__input-field-wrapper': {
-          w: 'auto',
-          mt: 0
-        }
-      }}
       onSubmitCb={ handleOnFormSubmit }
       { ...{ inputFields } }
       { ...props }
