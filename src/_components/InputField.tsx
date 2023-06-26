@@ -94,7 +94,7 @@ const InputField = forwardRef<HTMLInputElement | null, InputFieldProps>(
     }
 
     return (
-      <Box mt={2} w='100%'>
+      <Box className="rf__input-field-wrapper" mt={2} w='100%'>
         <FormItemWrapper
           {...{
             name,
