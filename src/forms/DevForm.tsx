@@ -4,8 +4,9 @@ import React, { FC } from 'react'
 import FormWrapper from '../_layout/FormWrapper'
 
 export type DevFormFields = {
-  originalPlannedDates: null | [Date,  Date]
-  originalChangeCost: string
+  name: string
+  title: string
+  description: string
 }
 
 interface DevFormComponentProps extends StackProps {
@@ -19,15 +20,26 @@ const DevFormComponent: FC<DevFormComponentProps> = ( { data, buttonLabel, onFor
 
   const inputFields: FormFieldType<DevFormFields>[] = [
     {
-      name: 'originalChangeCost',
+      name: 'name',
       componentType: 'input',
-      label: 'Originally planned change cost',
-      placeholder: 'Enter change cost',
+      label: 'Name',
+      placeholder: 'Enter name',
       initialValue: '',
-      size: 'sm',
-      validation: {
-        required: false
-      },
+    },
+    {
+      name: 'title',
+      componentType: 'input',
+      label: 'Title',
+      placeholder: 'Enter title',
+      initialValue: '',
+
+    },
+    {
+      name: 'description',
+      componentType: 'input',
+      label: 'Description',
+      placeholder: 'Enter description',
+      initialValue: '',
     },
   ]
 
@@ -38,6 +50,16 @@ const DevFormComponent: FC<DevFormComponentProps> = ( { data, buttonLabel, onFor
 
   return (
     <FormWrapper<DevFormFields>
+      w='full'
+      bg='red'
+      maxH={ 200 }
+      flexWrap='wrap'
+      sx={{
+        '.rf__input-field-wrapper': {
+          w: 'auto',
+          mt: 0
+        }
+      }}
       onSubmitCb={ handleOnFormSubmit }
       { ...{ inputFields } }
       { ...props }
