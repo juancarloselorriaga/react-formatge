@@ -64,6 +64,7 @@ export type FormFieldBaseType<T> = {
   name: keyof T
   initialValue: AnyFormType
   validation?: FormSchemaValidation<T>
+  isHidden?: boolean
 }
 
 export type FormFieldType<T> = ComponentFormField<T> | InputFormField<T>
