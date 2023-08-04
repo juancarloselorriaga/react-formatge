@@ -61,7 +61,7 @@ function FormWrapper<T>({
       {...{ error }}
       {...props}
     >
-      {inputFields.map((props) => (
+      { inputFields.filter(i => !i.isHidden).map( ( props ) => (
         <Fragment key={props.name.toString()}>
           {(() => {
             switch (props.componentType) {
