@@ -71,77 +71,81 @@ function FormWrapper<T>(
       { ...{ error } }
       { ...props }
     >
-      { inputFields.filter(i => !i.isHidden).map( ( props ) => (
-        <Fragment key={ props.name.toString() }>
-          { ( () => {
-            switch ( props.componentType ) {
-              case 'input': {
-                const {
-                  componentType,
-                  initialValue,
-                  name,
-                  validation,
-                  value,
-                  onValueChange,
-                  ...restOfProps
-                } = props
+      { inputFields.filter(i => !i.isHidden).map( ( props ) => {
+        delete props.isHidden
 
-                // if a value is passed, this will update its state within useFormUpdate hook
-                if ( typeof value === 'string' && formData[name]?.value !== value ) {
-                  handleUpdateData( { id: restOfProps.id, name, value } ).then()
+        return (
+          <Fragment key={ props.name.toString() }>
+            { ( () => {
+              switch ( props.componentType ) {
+                case 'input': {
+                  const {
+                    componentType,
+                    initialValue,
+                    name,
+                    validation,
+                    value,
+                    onValueChange,
+                    ...restOfProps
+                  } = props
+
+                  // if a value is passed, this will update its state within useFormUpdate hook
+                  if ( typeof value === 'string' && formData[name]?.value !== value ) {
+                    handleUpdateData( { id: restOfProps.id, name, value } ).then()
+                  }
+
+                  return (
+                    <InputField
+                      isRequired={ validation?.required }
+                      value={ parseInitialValue( formData[name]?.value as AnyFormType ) }
+                      error={ formData[name]?.error }
+                      { ...restOfProps }
+                      onValueChange={ ( payload: HandleUpdateDataPayload<T, string> ) => {
+                        onValueChange && onValueChange( payload )
+                        handleUpdateData( payload ).then()
+                      } }
+                      { ...{ name } }
+                    />
+                  )
                 }
 
-                return (
-                  <InputField
-                    isRequired={ validation?.required }
-                    value={ parseInitialValue( formData[name]?.value as AnyFormType ) }
-                    error={ formData[name]?.error }
-                    { ...restOfProps }
-                    onValueChange={ ( payload: HandleUpdateDataPayload<T, string> ) => {
-                      onValueChange && onValueChange( payload )
-                      handleUpdateData( payload ).then()
-                    } }
-                    { ...{ name } }
-                  />
-                )
-              }
+                case 'component': {
+                  const { name, validation, label, helperText, error, noTopSpace, component, initialValue } = props
 
-              case 'component': {
-                const { name, validation, label, helperText, error, noTopSpace, component, initialValue } = props
+                  const clonedComponentProps: CustomComponentImplementation<AnyFormType> = {
+                    defaultValue: initialValue,
+                    value: formData[name]?.value as AnyFormType,
+                    onUpdateValue: ( value ) =>
+                      handleUpdateData( {
+                        id: name,
+                        name,
+                        value,
+                      } ),
+                  }
 
-                const clonedComponentProps: CustomComponentImplementation<AnyFormType> = {
-                  defaultValue: initialValue,
-                  value: formData[name]?.value as AnyFormType,
-                  onUpdateValue: ( value ) =>
-                    handleUpdateData( {
-                      id: name,
-                      name,
-                      value,
-                    } ),
+                  return (
+                    <FormItemWrapper
+                      isRequired={ validation?.required }
+                      { ...{
+                        name,
+                        label,
+                        helperText,
+                        error,
+                        noTopSpace,
+                      } }
+                    >
+                      { React.cloneElement( component, clonedComponentProps ) }
+                    </FormItemWrapper>
+                  )
                 }
 
-                return (
-                  <FormItemWrapper
-                    isRequired={ validation?.required }
-                    { ...{
-                      name,
-                      label,
-                      helperText,
-                      error,
-                      noTopSpace,
-                    } }
-                  >
-                    { React.cloneElement( component, clonedComponentProps ) }
-                  </FormItemWrapper>
-                )
+                default:
+                  return props as never
               }
-
-              default:
-                return props as never
-            }
-          } )() }
-        </Fragment>
-      ) ) }
+            } )() }
+          </Fragment>
+        )
+      } ) }
       { children }
     </FormContainer>
   )
