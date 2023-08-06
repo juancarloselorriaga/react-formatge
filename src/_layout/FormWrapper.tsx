@@ -61,7 +61,10 @@ function FormWrapper<T>({
       {...{ error }}
       {...props}
     >
-      { inputFields.filter(i => !i.isHidden).map( ( props ) => (
+      { inputFields.filter(i => !i.isHidden).map( ( props ) => {
+        delete props.isHidden
+
+        return (
         <Fragment key={props.name.toString()}>
           {(() => {
             switch (props.componentType) {
@@ -123,7 +126,8 @@ function FormWrapper<T>({
             }
           })()}
         </Fragment>
-      ))}
+        )
+      } ) }
       {children}
     </FormContainer>
   )
