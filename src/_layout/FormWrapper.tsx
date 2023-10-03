@@ -22,7 +22,8 @@ function FormWrapper<T>(
     ...props
   }: FormWrapperProps<T> ) {
   const [ currentFormId, setCurrentFormId ] = useState<string | undefined>( formId )
-  const { initialState, validationStateSchema } = formSchema<T>( inputFields )
+  const availableInputFields = inputFields.filter(i => !i.isHidden)
+  const { initialState, validationStateSchema } = formSchema<T>( availableInputFields )
 
   const formUpdate = useFormUpdate<T>( initialState, validationStateSchema, onSubmitCb )
   const {
@@ -71,7 +72,7 @@ function FormWrapper<T>(
       { ...{ error } }
       { ...props }
     >
-      { inputFields.filter(i => !i.isHidden).map( ( props ) => {
+      { availableInputFields.map( ( props ) => {
         delete props.isHidden
 
         return (
