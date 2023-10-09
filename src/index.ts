@@ -15,7 +15,6 @@ import ErrorMessage from './_components/ErrorMessage'
 import CommaNumberField from './_components/CommaNumberField'
 import OptionSelection from './_components/OptionSelection/OptionSelection'
 import MultipleOptionSelection from './_components/OptionSelection/MultipleOptionSelection'
-export * from './types'
 
 export {
   DatePickerComponent,
