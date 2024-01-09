@@ -1,5 +1,5 @@
 import React, { FC, useCallback, useMemo } from 'react'
-import { DateRange, Range, RangeKeyDict } from 'react-date-range'
+import { DateRange, DateRangeProps, Range, RangeKeyDict } from 'react-date-range'
 import { formatDate } from '../../helpers/utils'
 import DateComponentWrapper from './DateComponentWrapper'
 import { CustomComponentImplementation } from '../../types'
@@ -11,6 +11,7 @@ interface DatePickerComponentProps extends CustomComponentImplementation<[ Date,
   onChange?: ( dates: DatePickerRangeDate ) => void
   dateDisplayFormat?: string
   isDisabled?: boolean
+  dateRangePickerProps?: DateRangeProps
 }
 
 const DateRangePickerComponent: FC<DatePickerComponentProps> = ( {
@@ -20,11 +21,17 @@ const DateRangePickerComponent: FC<DatePickerComponentProps> = ( {
                                                                    defaultValue,
                                                                    value,
                                                                    onUpdateValue,
+                                                                   dateRangePickerProps: {
+                                                                     onChange: dateRangePickerOnChange,
+                                                                     ...dateRangePickerProps
+                                                                   } = {},
                                                                    ...props
                                                                  } ) => {
   const updateRange = ( range: Range[] ) => {
-    onChange && onChange( [ range[0].startDate!, range[0].endDate! ] )
-    onUpdateValue && onUpdateValue( [ range[0].startDate!, range[0].endDate! ] )
+    const newRange = [ range[0].startDate!, range[0].endDate! ];
+    onChange && onChange( newRange )
+    onUpdateValue && onUpdateValue( newRange )
+    dateRangePickerOnChange?.(newRange)
   }
 
   const date = useCallback( ( pos: number ) => {
@@ -71,6 +78,7 @@ const DateRangePickerComponent: FC<DatePickerComponentProps> = ( {
         ] }
         rangeColors={ [ 'primary', 'primary' ] }
         { ...{ dateDisplayFormat } }
+        { ...dateRangePickerProps }
       />
     </DateComponentWrapper>
   )
