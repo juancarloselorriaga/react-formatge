@@ -5,8 +5,7 @@ import FormWrapper from '../_layout/FormWrapper'
 import DatePickerComponent from '../_components/DateComponents/DatePickerComponent'
 
 export type DevFormFields = {
-  name: string
-  title: string
+  range: [Date, Date] | null
   date: Date | null
 }
 
@@ -21,22 +20,16 @@ const DevFormComponent: FC<DevFormComponentProps> = ( { data, buttonLabel, onFor
 
   const inputFields: FormFieldType<DevFormFields>[] = [
     {
-      name: 'name',
-      componentType: 'input',
-      label: 'Name',
-      placeholder: 'Enter name',
-      initialValue: '',
-    },
-    {
-      name: 'title',
-      componentType: 'input',
-      label: 'Title',
-      placeholder: 'Enter title',
-      initialValue: '',
-
-    },
-    {
       name: 'date',
+      componentType: 'component',
+      label: 'Date',
+      initialValue: null,
+      component: (
+        <DatePickerComponent title="Date" />
+      )
+    },
+    {
+      name: 'range',
       componentType: 'component',
       label: 'Date',
       initialValue: null,
